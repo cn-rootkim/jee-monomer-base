@@ -4,12 +4,9 @@ spring:
       on-profile: local
   datasource:
     druid:
-      url: jdbc:mysql://192.168.182.130:3306/jee_monomer_base?useUnicode=true&useSSL=false&characterEncoding=utf-8&autoReconnectForPools=true&serverTimezone=Asia/Shanghai
+      url: jdbc:mysql://192.168.182.130:3306/blog?useUnicode=true&useSSL=false&characterEncoding=utf-8&autoReconnectForPools=true&serverTimezone=Asia/Shanghai
       username: root
       password: reEgx%3D%24nTC%24tjhETQ4R3T%5EYU5K34vd
-#      url: jdbc:mysql://192.168.3.201:3306/dev_da5.0?useUnicode=true&useSSL=false&characterEncoding=utf-8&autoReconnectForPools=true&serverTimezone=Asia/Shanghai
-#      username: jg
-#      password: jg@12345
       initial-size: 5
       max-active: 20
       max-wait: 5000

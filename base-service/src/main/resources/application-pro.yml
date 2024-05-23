@@ -4,7 +4,7 @@ spring:
       on-profile: pro
   datasource:
     druid:
-      url: jdbc:mysql://127.0.0.1:3306/jee_monomer_base?useUnicode=true&useSSL=false&characterEncoding=utf-8&autoReconnectForPools=true&serverTimezone=Asia/Shanghai
+      url: jdbc:mysql://127.0.0.1:3306/blog?useUnicode=true&useSSL=false&characterEncoding=utf-8&autoReconnectForPools=true&serverTimezone=Asia/Shanghai
       username: root
       password: reEgx=$nTC$tjhETQ4R3T^YU5K34vd
       initial-size: 10
