@@ -58,6 +58,9 @@ public class ControllerAspect {
                 resultStr = result.toString();
             }
         }
+        if(resultStr.length()>5000){
+            resultStr = resultStr.substring(0,5000)+".........................";
+        }
         log.debug("response end》》》\nheader:{}\nresult:{}", headers, resultStr);
     }
 
