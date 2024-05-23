@@ -61,7 +61,7 @@ public class BlogController {
 
     @PostMapping("page")
     @ApiOperation("分页查询博客")
-    @JsonView(Blog.PageView.class)
+    @JsonView(BlogBO.PageView.class)
     public ResultVO<BasePageVO<BlogBO>> page(@Valid @RequestBody PageDTO pageDTO) {
         return ResultVO.success(blogService.pageBlogBO(pageDTO));
     }

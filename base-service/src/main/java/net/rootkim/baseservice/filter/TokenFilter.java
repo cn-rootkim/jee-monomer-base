@@ -62,7 +62,10 @@ public class TokenFilter implements Filter {
             "/swagger-resources.*",
             "/v2/.*",
             "/doc.html",
-            "/webjars/.*"
+            "/webjars/.*",
+            "/blogType/listTree",
+            "/blog/page",
+            "/blog/info",
     };
 
     /**
@@ -96,15 +99,15 @@ public class TokenFilter implements Filter {
                 servletRequest.setAttribute(HttpHeaderUtil.USER_TYPE_KEY, userType);
             }
             //放行无需登录的接口白名单
-            if (!StringUtils.hasText(token)) {
-                for (String apiWhite : apiWhiteList) {
-                    Pattern pattern = Pattern.compile("^" + apiWhite + "$");
-                    Matcher matcher = pattern.matcher(requestURI);
-                    if (matcher.matches()) {
-                        filterChain.doFilter(servletRequest, servletResponse);
-                        return;
-                    }
+            for (String apiWhite : apiWhiteList) {
+                Pattern pattern = Pattern.compile("^" + apiWhite + "$");
+                Matcher matcher = pattern.matcher(requestURI);
+                if (matcher.matches()) {
+                    filterChain.doFilter(servletRequest, servletResponse);
+                    return;
                 }
+            }
+            if (!StringUtils.hasText(token)) {
                 resolver.resolveException((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse, null, new UnauthorizedException("未登录"));
                 return;
             }

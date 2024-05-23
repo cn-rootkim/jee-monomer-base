@@ -102,6 +102,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements Bl
         }
         this.page(pageBlog, BlogQueryWrapper);
         BeanUtils.copyProperties(pageBlog, page);
+        List<BlogBO> blogBOList = new ArrayList<>();
         if (pageBlog.getRecords() != null) {
             for (Blog record : pageBlog.getRecords()) {
                 BlogBO blogBO = new BlogBO();
@@ -122,8 +123,10 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements Bl
                     blogTypeList.add(blogType);
                 }
                 blogBO.setBlogTypeList(blogTypeList);
+                blogBOList.add(blogBO);
             }
         }
+        page.setRecords(blogBOList);
         return page;
     }
 
