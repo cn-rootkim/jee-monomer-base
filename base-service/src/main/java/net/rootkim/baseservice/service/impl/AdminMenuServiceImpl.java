@@ -2,7 +2,6 @@ package net.rootkim.baseservice.service.impl;
 
 import net.rootkim.baseservice.dao.AdminMenuDao;
 import net.rootkim.baseservice.domain.bo.AdminMenuBO;
-import net.rootkim.baseservice.domain.bo.AdminMenuTreeBO;
 import net.rootkim.baseservice.domain.dto.adminMenu.ListTreeDTO;
 import net.rootkim.baseservice.domain.po.AdminMenu;
 import net.rootkim.baseservice.domain.po.AdminMenuFunction;
@@ -146,7 +145,7 @@ public class AdminMenuServiceImpl extends ServiceImpl<AdminMenuMapper, AdminMenu
     }
 
     @Override
-    public List<AdminMenuTreeBO> listTree(ListTreeDTO listTreeDTO, String userId) {
+    public List<AdminMenuBO> listTree(ListTreeDTO listTreeDTO, String userId) {
         List<AdminMenu> adminMenus = this.queryAll();
         List<AdminMenuBO> adminMenuBOList = adminMenus.stream().map(adminMenu -> {
             AdminMenuBO adminMenuBO = new AdminMenuBO();
@@ -164,11 +163,11 @@ public class AdminMenuServiceImpl extends ServiceImpl<AdminMenuMapper, AdminMenu
                 adminMenuBO.setIsAuth(adminMenusByUserId.stream().anyMatch(adminMenu -> adminMenu.getId().equals(adminMenuBO.getId())));
             }
         }
-        List<AdminMenuTreeBO> adminMenuTreeBOList = new ArrayList<>();
+        List<AdminMenuBO> adminMenuTreeBOList = new ArrayList<>();
         //递归出菜单Tree
         for (AdminMenuBO adminMenuBO : adminMenuBOList) {
             if (!StringUtils.hasText(adminMenuBO.getParentId())) {
-                AdminMenuTreeBO adminMenuTreeBO = new AdminMenuTreeBO();
+                AdminMenuBO adminMenuTreeBO = new AdminMenuBO();
                 BeanUtils.copyProperties(adminMenuBO, adminMenuTreeBO);
                 recursionAdminMenuTreeBO(adminMenuTreeBO, adminMenuBOList);
                 adminMenuTreeBOList.add(adminMenuTreeBO);
@@ -177,13 +176,13 @@ public class AdminMenuServiceImpl extends ServiceImpl<AdminMenuMapper, AdminMenu
         return adminMenuTreeBOList;
     }
 
-    private void recursionAdminMenuTreeBO(AdminMenuTreeBO parent, List<AdminMenuBO> adminMenuBOList) {
+    private void recursionAdminMenuTreeBO(AdminMenuBO parent, List<AdminMenuBO> adminMenuBOList) {
         for (AdminMenuBO adminMenuBO : adminMenuBOList) {
             if (parent.getId().equals(adminMenuBO.getParentId())) {
                 if (ObjectUtils.isEmpty(parent.getChildList())) {
                     parent.setChildList(new ArrayList<>());
                 }
-                AdminMenuTreeBO adminMenuTreeBO = new AdminMenuTreeBO();
+                AdminMenuBO adminMenuTreeBO = new AdminMenuBO();
                 BeanUtils.copyProperties(adminMenuBO, adminMenuTreeBO);
                 parent.getChildList().add(adminMenuTreeBO);
                 recursionAdminMenuTreeBO(adminMenuTreeBO, adminMenuBOList);

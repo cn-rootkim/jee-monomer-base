@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import net.rootkim.baseservice.domain.po.AdminMenu;
 
+import java.util.List;
+
 /**
  * @author RootKim[rootkim.net]
  * @since 2024/5/20
@@ -19,4 +21,8 @@ public class AdminMenuBO extends AdminMenu {
     @JsonView({ListTreeView.class})
     @ApiModelProperty("是否已授权")
     private Boolean isAuth;
+
+    @JsonView({ListTreeView.class})
+    @ApiModelProperty("子菜单集合")
+    private List<AdminMenuBO> childList;
 }

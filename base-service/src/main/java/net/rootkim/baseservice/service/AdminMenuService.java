@@ -1,6 +1,6 @@
 package net.rootkim.baseservice.service;
 
-import net.rootkim.baseservice.domain.bo.AdminMenuTreeBO;
+import net.rootkim.baseservice.domain.bo.AdminMenuBO;
 import net.rootkim.baseservice.domain.dto.adminMenu.ListTreeDTO;
 import net.rootkim.baseservice.domain.po.AdminMenu;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -39,5 +39,5 @@ public interface AdminMenuService extends IService<AdminMenu> {
 
     List<AdminMenu> queryByRoleId(String roleId);
 
-    List<AdminMenuTreeBO> listTree(ListTreeDTO listTreeDTO, String userId);
+    List<AdminMenuBO> listTree(ListTreeDTO listTreeDTO, String userId);
 }
