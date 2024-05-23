@@ -3,7 +3,7 @@ package net.rootkim.baseservice.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import net.rootkim.baseservice.domain.bo.AdminMenuTreeBO;
+import net.rootkim.baseservice.domain.bo.AdminMenuBO;
 import net.rootkim.baseservice.domain.dto.adminMenu.AddDTO;
 import net.rootkim.baseservice.domain.dto.adminMenu.ListTreeDTO;
 import net.rootkim.baseservice.domain.dto.adminMenu.UpdateDTO;
@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,7 +63,7 @@ public class AdminMenuController {
     @PostMapping("listTree")
     @ApiOperation("管理系统菜单列表（树状结构）")
     @JsonView(AdminMenu.ListTreeView.class)
-    public ResultVO<List<AdminMenuTreeBO>> listTree(@Valid @RequestBody ListTreeDTO listTreeDTO, @RequestAttribute(value = HttpHeaderUtil.USER_ID_KEY, required = false) String userId) {
+    public ResultVO<List<AdminMenuBO>> listTree(@Valid @RequestBody ListTreeDTO listTreeDTO, @RequestAttribute(value = HttpHeaderUtil.USER_ID_KEY, required = false) String userId) {
         return ResultVO.success(adminMenuService.listTree(listTreeDTO, userId));
     }
 }
