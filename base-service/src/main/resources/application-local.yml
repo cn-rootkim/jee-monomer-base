@@ -1,0 +1,39 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    druid:
+      url: jdbc:mysql://192.168.182.130:3306/jee_monomer_base?useUnicode=true&useSSL=false&characterEncoding=utf-8&autoReconnectForPools=true&serverTimezone=Asia/Shanghai
+      username: root
+      password: reEgx%3D%24nTC%24tjhETQ4R3T%5EYU5K34vd
+#      url: jdbc:mysql://192.168.3.201:3306/dev_da5.0?useUnicode=true&useSSL=false&characterEncoding=utf-8&autoReconnectForPools=true&serverTimezone=Asia/Shanghai
+#      username: jg
+#      password: jg@12345
+      initial-size: 5
+      max-active: 20
+      max-wait: 5000
+      min-evictable-idle-time-millis: 30000
+      time-between-eviction-runs-millis: 30000
+      keep-alive: true
+      min-idle: 5
+      remove-abandoned: false
+      test-while-idle: true
+      validation-query: SELECT 1
+      test-on-borrow: false
+      test-on-return: false
+      filters: stat,wall,slf4j
+  redis:
+    host: 192.168.182.130
+    port: 6379
+    password: 4@Bhm&RHX2dc
+    jedis:
+      pool:
+        max-idle: 8 # 最大空闲连接数
+        min-idle: 2 # 最小空闲连接数
+    timeout: 5000 # 连接超时时间（单位：毫秒）
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+swagger:
+  enabled: true

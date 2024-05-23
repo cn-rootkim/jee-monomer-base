@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: base-service
+  profiles:
+    active: local
+  main:
+    allow-circular-references: true # 跳过循环依赖
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher #Swagger需要的配置
+server:
+  port: 9001
