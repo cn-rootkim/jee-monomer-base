@@ -66,6 +66,7 @@ public class TokenFilter implements Filter {
             "/blogType/listTree",
             "/blog/page",
             "/blog/info",
+            "/tool/.*",
     };
 
     /**
