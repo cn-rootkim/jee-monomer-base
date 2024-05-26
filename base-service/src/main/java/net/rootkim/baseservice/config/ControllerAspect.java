@@ -32,7 +32,7 @@ public class ControllerAspect {
         assert attributes != null;
         HttpServletRequest request = attributes.getRequest();
         try {
-            log.debug("request start》》》\nIP:{}\nURL：{}\nheader:{}\nparam:{}", IPUtil.getIpAddr(request),
+            log.info("request start》》》\nIP:{}\nURL：{}\nheader:{}\nparam:{}", IPUtil.getIpAddr(request),
                     request.getRequestURL().toString(),
                     JSONObject.toJSONString(this.getHeader(request)), JSONObject.toJSONString(this.getRequestParams(joinPoint)));
         } catch (Exception e) {
@@ -94,6 +94,14 @@ public class ControllerAspect {
             if (value instanceof MultipartFile) {
                 MultipartFile file = (MultipartFile) value;
                 value = file.getOriginalFilename();
+            } else if (value instanceof MultipartFile[]) {
+                MultipartFile[] fileList = (MultipartFile[]) value;
+                StringBuilder stringBuilder = new StringBuilder();
+                for (MultipartFile multipartFile : fileList) {
+                    stringBuilder.append(multipartFile.getOriginalFilename());
+                    stringBuilder.append(",");
+                }
+                value = stringBuilder.toString();
             }
             requestParams.put(paramNames[i], value);
         }

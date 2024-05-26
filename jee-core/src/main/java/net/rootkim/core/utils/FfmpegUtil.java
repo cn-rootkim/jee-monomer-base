@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Ffmpeg
+ *
  * @author RootKim[rootkim.net]
  * @since 2024/5/19
  */
@@ -26,7 +28,7 @@ public class FfmpegUtil {
             Integer no2 = Integer.parseInt(fileName2.split("\\.")[0]);
             return no1.compareTo(no2);
         }).collect(Collectors.toList());
-        String filePaths = filePathList.stream().map(fileName -> "file '"+folderPath + fileName+"'").collect(Collectors.joining("\n"));
+        String filePaths = filePathList.stream().map(fileName -> "file '" + folderPath + fileName + "'").collect(Collectors.joining("\n"));
         File fileList = new File(folderPath + "fileList.txt");
         FileUtil.createAndWriteTxt(fileList.getPath(), filePaths);
         File mp4 = new File(folderPath + "result.mp4");
