@@ -1,5 +1,6 @@
 package net.rootkim.baseservice.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.rootkim.baseservice.dao.SysUserDao;
@@ -28,7 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +91,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 throw new ParamException("角色id集合不可为空");
             }
         } else if (sysUser.getType().intValue() == 1) {//如果是C端用户，(用户名+密码 或 手机号 或 微信小程序openid 或 微信公众号openid 或 微信移动端openid 或 Web端openid 或 微信跨平台id)不可为空
-            if (StringUtils.hasText(sysUser.getUsername()) && StringUtils.hasText(sysUser.getPassword())) {//用户名和密码都不为空，检查用户名是否唯一，检查密码是否合法、是否符合要求
+            if (StrUtil.isNotBlank(sysUser.getUsername()) && StrUtil.isNotBlank(sysUser.getPassword())) {//用户名和密码都不为空，检查用户名是否唯一，检查密码是否合法、是否符合要求
                 long count = this.count(new LambdaQueryWrapper<SysUser>()
                         .eq(SysUser::getUsername, sysUser.getUsername())
                         .eq(SysUser::getType, sysUser.getType()));
@@ -104,15 +105,15 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                     throw new ParamException("密码非法");
                 }
                 PasswordUtil.check(password);
-            } else if (StringUtils.hasText(sysUser.getPhone())) {//手机号不为空，检查手机号是否唯一
+            } else if (StrUtil.isNotBlank(sysUser.getPhone())) {//手机号不为空，检查手机号是否唯一
                 long count = this.count(new LambdaQueryWrapper<SysUser>()
                         .eq(SysUser::getPhone, sysUser.getPhone())
                         .eq(SysUser::getType, sysUser.getType()));
                 if (count > 0) {
                     throw new ParamException("手机号已存在");
                 }
-            } else if (!StringUtils.hasText(sysUser.getWxXcxOpenId()) && !StringUtils.hasText(sysUser.getWxGzhOpenId()) && !StringUtils.hasText(sysUser.getWxAppOpenId())
-                    && !StringUtils.hasText(sysUser.getWxWebOpenId()) && !StringUtils.hasText(sysUser.getWxUnionid())) {
+            } else if (StrUtil.isBlank(sysUser.getWxXcxOpenId()) && StrUtil.isBlank(sysUser.getWxGzhOpenId()) && StrUtil.isBlank(sysUser.getWxAppOpenId())
+                    && StrUtil.isBlank(sysUser.getWxWebOpenId()) && StrUtil.isBlank(sysUser.getWxUnionid())) {
                 throw new ParamException("(用户名+密码 或 手机号 或 微信小程序openid 或 微信公众号openid 或 微信移动端openid 或 Web端openid 或 微信跨平台id)不可为空");
             }
             if (CollectionUtils.isEmpty(roleIdList)) {//如果没有角色id集合，那么初始化一个C端用户的角色id集合
@@ -156,7 +157,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new ParamException("用户不存在");
         }
         //如果username不为空，检查username是否唯一
-        if (StringUtils.hasText(sysUser.getUsername())) {
+        if (StrUtil.isNotBlank(sysUser.getUsername())) {
             long count = this.count(new LambdaQueryWrapper<SysUser>()
                     .eq(SysUser::getUsername, sysUser.getUsername())
                     .eq(SysUser::getType, oldSysUser.getType())
@@ -166,7 +167,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             }
         }
         //如果手机号不为空，检查手机号是否唯一
-        if (StringUtils.hasText(sysUser.getPhone())) {
+        if (StrUtil.isNotBlank(sysUser.getPhone())) {
             long count = this.count(new LambdaQueryWrapper<SysUser>()
                     .eq(SysUser::getPhone, sysUser.getPhone())
                     .eq(SysUser::getType, oldSysUser.getType())
@@ -197,10 +198,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public void updateLoginPassword(String userId, String password) {
-        if (!StringUtils.hasText(userId)) {
+        if (StrUtil.isBlank(userId)) {
             throw new ParamException("用户id不可为空");
         }
-        if (!StringUtils.hasText(password)) {
+        if (StrUtil.isBlank(password)) {
             throw new ParamException("密码不可为空");
         } else {
             String checkPassword;
@@ -221,13 +222,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public void updateLoginPasswordByOldPassword(String userId, String oldPassword, String newPassword) {
-        if (!StringUtils.hasText(userId)) {
+        if (StrUtil.isBlank(userId)) {
             throw new ParamException("用户id不可为空");
         }
-        if (!StringUtils.hasText(oldPassword)) {
+        if (StrUtil.isBlank(oldPassword)) {
             throw new ParamException("旧密码不可为空");
         }
-        if (!StringUtils.hasText(newPassword)) {
+        if (StrUtil.isBlank(newPassword)) {
             throw new ParamException("新密码不可为空");
         }
         SysUser sysUser = this.getById(userId);
@@ -242,10 +243,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public void updateLoginPasswordBySmsCode(String userId, String password, String smsCode) {
-        if (!StringUtils.hasText(userId)) {
+        if (StrUtil.isBlank(userId)) {
             throw new ParamException("用户id不可为空");
         }
-        if (!StringUtils.hasText(smsCode)) {
+        if (StrUtil.isBlank(smsCode)) {
             throw new ParamException("短信验证码不可为空");
         }
         SysUser sysUser = this.getById(userId);
@@ -273,9 +274,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         Page<SysUser> page = new Page<>(pageParam.getCurrent(), pageParam.getSize());
         this.page(page, new LambdaQueryWrapper<SysUser>()
                 .eq(!ObjectUtils.isEmpty(pageParam.getType()), SysUser::getType, pageParam.getType())
-                .like(StringUtils.hasText(pageParam.getUsername()), SysUser::getUsername, pageParam.getUsername())
-                .like(StringUtils.hasText(pageParam.getName()), SysUser::getName, pageParam.getName())
-                .like(StringUtils.hasText(pageParam.getPhone()), SysUser::getPhone, pageParam.getPhone())
+                .like(StrUtil.isNotBlank(pageParam.getUsername()), SysUser::getUsername, pageParam.getUsername())
+                .like(StrUtil.isNotBlank(pageParam.getName()), SysUser::getName, pageParam.getName())
+                .like(StrUtil.isNotBlank(pageParam.getPhone()), SysUser::getPhone, pageParam.getPhone())
                 .eq(!ObjectUtils.isEmpty(pageParam.getIsEnabled()), SysUser::getIsEnabled, pageParam.getIsEnabled())
                 .orderByDesc(SysUser::getUpdateTime));
         BeanUtils.copyProperties(page, basePageVO);
@@ -283,13 +284,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             basePageVO.setRecords(page.getRecords().stream().map(sysUser -> {
                 SysUserBO sysUserBO = new SysUserBO();
                 BeanUtils.copyProperties(sysUser, sysUserBO);
-                if (StringUtils.hasText(sysUser.getCreater())) {
+                if (StrUtil.isNotBlank(sysUser.getCreater())) {
                     SysUser creater = this.queryById(sysUser.getCreater());
                     if (!ObjectUtils.isEmpty(creater)) {
                         sysUserBO.setCreaterName(creater.getUsername());
                     }
                 }
-                if (StringUtils.hasText(sysUser.getUpdater())) {
+                if (StrUtil.isNotBlank(sysUser.getUpdater())) {
                     SysUser updater = this.queryById(sysUser.getUpdater());
                     if (!ObjectUtils.isEmpty(updater)) {
                         sysUserBO.setUpdaterName(updater.getUsername());
@@ -318,10 +319,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (ObjectUtils.isEmpty(platform)) {
             throw new ParamException("平台不可为空");
         }
-        if (!StringUtils.hasText(username)) {
+        if (StrUtil.isBlank(username)) {
             throw new ParamException("用户名不可为空");
         }
-        if (!StringUtils.hasText(password)) {
+        if (StrUtil.isBlank(password)) {
             throw new ParamException("密码不可为空");
         }
         if (ObjectUtils.isEmpty(userType)) {
@@ -345,7 +346,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (ObjectUtils.isEmpty(platform)) {
             throw new ParamException("平台不可为空");
         }
-        if (!StringUtils.hasText(openId)) {
+        if (StrUtil.isBlank(openId)) {
             throw new ParamException("openid不可为空");
         }
         if (ObjectUtils.isEmpty(openIdType)) {
@@ -397,10 +398,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (ObjectUtils.isEmpty(platform)) {
             throw new ParamException("平台不可为空");
         }
-        if (!StringUtils.hasText(phone)) {
+        if (StrUtil.isBlank(phone)) {
             throw new ParamException("手机号不可为空");
         }
-        if (!StringUtils.hasText(smsCode)) {
+        if (StrUtil.isBlank(smsCode)) {
             throw new ParamException("短信验证码不可为空");
         }
         if (ObjectUtils.isEmpty(userType)) {
@@ -428,7 +429,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (ObjectUtils.isEmpty(platform)) {
             throw new ParamException("平台不可为空");
         }
-        if (!StringUtils.hasText(userId)) {
+        if (StrUtil.isBlank(userId)) {
             throw new ParamException("用户id不可为空");
         }
         if (ObjectUtils.isEmpty(userType)) {

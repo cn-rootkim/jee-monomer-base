@@ -1,5 +1,6 @@
 package net.rootkim.baseservice.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import net.rootkim.baseservice.dao.AdminMenuFunctionDao;
 import net.rootkim.baseservice.domain.bo.AdminMenuFunctionBO;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,10 +42,10 @@ public class AdminMenuFunctionServiceImpl extends ServiceImpl<AdminMenuFunctionM
 
     @Override
     public void add(AdminMenuFunction adminMenuFunction) {
-        if (!StringUtils.hasText(adminMenuFunction.getName())) {
+        if (StrUtil.isBlank(adminMenuFunction.getName())) {
             throw new ParamException("菜单功能名称不能为空");
         }
-        if (!StringUtils.hasText(adminMenuFunction.getAdminMenuId())) {
+        if (StrUtil.isBlank(adminMenuFunction.getAdminMenuId())) {
             throw new ParamException("菜单ID不能为空");
         }
         this.save(adminMenuFunction);
@@ -70,10 +71,10 @@ public class AdminMenuFunctionServiceImpl extends ServiceImpl<AdminMenuFunctionM
 
     @Override
     public void updateDBAndRedis(AdminMenuFunction adminMenuFunction) {
-        if (!StringUtils.hasText(adminMenuFunction.getName())) {
+        if (StrUtil.isBlank(adminMenuFunction.getName())) {
             throw new ParamException("菜单功能名称不能为空");
         }
-        if (!StringUtils.hasText(adminMenuFunction.getAdminMenuId())) {
+        if (StrUtil.isBlank(adminMenuFunction.getAdminMenuId())) {
             throw new ParamException("菜单ID不能为空");
         }
         this.updateById(adminMenuFunction);
@@ -122,7 +123,7 @@ public class AdminMenuFunctionServiceImpl extends ServiceImpl<AdminMenuFunctionM
     @Override
     public List<AdminMenuFunctionBO> list(ListDTO listDTO, String userId) {
         List<AdminMenuFunctionBO> list;
-        if (StringUtils.hasText(listDTO.getAdminMenuId())) {
+        if (StrUtil.isNotBlank(listDTO.getAdminMenuId())) {
             list = this.queryByAdminMenuId(listDTO.getAdminMenuId()).stream().map(adminMenuFunction -> {
                 AdminMenuFunctionBO adminMenuFunctionBO = new AdminMenuFunctionBO();
                 BeanUtils.copyProperties(adminMenuFunction, adminMenuFunctionBO);
@@ -135,11 +136,11 @@ public class AdminMenuFunctionServiceImpl extends ServiceImpl<AdminMenuFunctionM
                 return adminMenuFunctionBO;
             }).collect(Collectors.toList());
         }
-        if (StringUtils.hasText(listDTO.getName())) {
+        if (StrUtil.isNotBlank(listDTO.getName())) {
             list = list.stream().filter(adminMenuFunctionBO -> adminMenuFunctionBO.getName().contains(listDTO.getName())).collect(Collectors.toList());
         }
         if(listDTO.getMode()==1){
-            if (!StringUtils.hasText(listDTO.getRoleId())) {
+            if (StrUtil.isBlank(listDTO.getRoleId())) {
                 throw new ParamException("角色ID不能为空");
             }
             List<SysRoleAdminMenuFunctionRelation> sysRoleAdminMenuFunctionRelations = sysRoleAdminMenuFunctionRelationService.queryByRoleId(listDTO.getRoleId());

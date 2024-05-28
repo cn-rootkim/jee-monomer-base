@@ -1,5 +1,6 @@
 package net.rootkim.baseservice.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import net.rootkim.baseservice.dao.SysRoleAdminMenuRelationDao;
 import net.rootkim.baseservice.domain.po.SysRoleAdminMenuRelation;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+
 
 import java.util.Collections;
 import java.util.List;
@@ -34,10 +35,10 @@ public class SysRoleAdminMenuRelationServiceImpl extends ServiceImpl<SysRoleAdmi
 
     @Override
     public void add(SysRoleAdminMenuRelation sysRoleAdminMenuRelation) {
-        if (!StringUtils.hasText(sysRoleAdminMenuRelation.getSysRoleId())) {
+        if (StrUtil.isBlank(sysRoleAdminMenuRelation.getSysRoleId())) {
             throw new ParamException("系统角色id不可为空");
         }
-        if (!StringUtils.hasText(sysRoleAdminMenuRelation.getAdminMenuId())) {
+        if (StrUtil.isBlank(sysRoleAdminMenuRelation.getAdminMenuId())) {
             throw new ParamException("管理系统菜单id不可为空");
         }
         long count = this.count(new LambdaQueryWrapper<SysRoleAdminMenuRelation>()

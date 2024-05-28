@@ -1,7 +1,8 @@
 package net.rootkim.core.utils;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.StringUtils;
+
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,25 +17,25 @@ public class IPUtil {
 
     public static String getIpAddr(HttpServletRequest request) {
         String ipAddr = request.getHeader("X-Forwarded-For");
-        if (StringUtils.hasText(ipAddr)) {
+        if (StrUtil.isNotBlank(ipAddr)) {
             if (ipAddr.contains(",")) {
                 ipAddr = ipAddr.split(",")[0];
             }
         } else {
             ipAddr = request.getHeader("Proxy-Client-IP");
-            if (StringUtils.hasText(ipAddr)) {
+            if (StrUtil.isNotBlank(ipAddr)) {
                 if (ipAddr.contains(",")) {
                     ipAddr = ipAddr.split(",")[0];
                 }
             } else {
                 ipAddr = request.getHeader("WL-Proxy-Client-IP");
-                if (StringUtils.hasText(ipAddr)) {
+                if (StrUtil.isNotBlank(ipAddr)) {
                     if (ipAddr.contains(",")) {
                         ipAddr = ipAddr.split(",")[0];
                     }
                 } else {
                     ipAddr = request.getHeader("X-Real-IP");
-                    if (StringUtils.hasText(ipAddr)) {
+                    if (StrUtil.isNotBlank(ipAddr)) {
                         if (ipAddr.contains(",")) {
                             ipAddr = ipAddr.split(",")[0];
                         }

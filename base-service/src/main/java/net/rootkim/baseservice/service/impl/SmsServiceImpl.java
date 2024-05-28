@@ -1,18 +1,18 @@
 package net.rootkim.baseservice.service.impl;
 
+import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.rootkim.baseservice.service.SmsService;
 import net.rootkim.core.constant.SmsRedisKeyConstant;
 import net.rootkim.core.domain.bo.SmsCodeType;
 import net.rootkim.core.exception.SmsException;
-import net.rootkim.core.utils.AliSmsUtil;
-import net.rootkim.core.utils.RandomUtil;
-import net.rootkim.core.utils.ValidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,41 +29,41 @@ public class SmsServiceImpl implements SmsService {
 
     @Override
     public void sendSmsCode(String phone, String ip, SmsCodeType smsCodeType, String userId) throws Exception {
-        if (!StringUtils.hasText(phone)) {
+        if (StrUtil.isBlank(phone)) {
             throw new SmsException("手机号不可为空");
         }
-        if (!ValidUtil.isValidPhoneNumber(phone)) {
+        if (!Validator.isMobile(phone)) {
             throw new SmsException("手机号格式不正确");
         }
-        if (!StringUtils.hasText(ip)) {
+        if (StrUtil.isBlank(ip)) {
             throw new SmsException("ip不可为空");
         }
         if (ObjectUtils.isEmpty(smsCodeType)) {
             throw new SmsException("短信验证码类型不可为空");
         }
-        if (!StringUtils.hasText(userId) && (!smsCodeType.equals(SmsCodeType.LOGIN) || !smsCodeType.equals(SmsCodeType.REGISTER))) {
+        if (StrUtil.isBlank(userId) && (!smsCodeType.equals(SmsCodeType.LOGIN) || !smsCodeType.equals(SmsCodeType.REGISTER))) {
             throw new SmsException("发送非登录或注册验证码，需要先登录");
         }
         String smsCodeRecordKey = SmsRedisKeyConstant.SMS_CODE_RECORD + phone;
         //检查手机号短信验证码发送记录[所有业务，用于限制每个手机号 1分钟内发送间隔]
         String value = stringRedisTemplate.opsForValue().get(smsCodeRecordKey);
-        if (StringUtils.hasText(value)) {
+        if (StrUtil.isNotBlank(value)) {
             throw new SmsException("1分钟内只能发送一次短信验证码");
         }
         //检查手机号短信验证码发送总数[所有业务，用于限制每个手机号 24小时内发送总数]
         String smsCodeTotalPhoneKey = SmsRedisKeyConstant.SMS_CODE_TOTAL_PHONE + phone;
         value = stringRedisTemplate.opsForValue().get(smsCodeTotalPhoneKey);
-        if (StringUtils.hasText(value) && Integer.parseInt(value) > 60) {
+        if (StrUtil.isNotBlank(value) && Integer.parseInt(value) > 60) {
             throw new SmsException("短信发送频繁，24小时后解封");
         }
         //检查IP短信验证码发送总数[所有业务，用于限制每个IP 24小时内发送总数]
         String smsCodeTotalIpKey = SmsRedisKeyConstant.SMS_CODE_TOTAL_IP + ip;
         value = stringRedisTemplate.opsForValue().get(smsCodeTotalIpKey);
-        if (StringUtils.hasText(value) && Integer.parseInt(value) > 600) {
+        if (StrUtil.isNotBlank(value) && Integer.parseInt(value) > 600) {
             throw new SmsException("短信发送频繁，24小时后解封");
         }
         //发送短信验证码
-        String smsCode = RandomUtil.getIntStr(10, 6);
+        String smsCode = RandomUtil.randomNumbers(6);
         log.info("发送短信验证码：{}", smsCode);
 //        AliSmsUtil.sendSms(phone,"","",null);
         //存储手机号短信验证码发送记录[所有业务，用于限制每个手机号 1分钟内发送间隔]
@@ -71,7 +71,7 @@ public class SmsServiceImpl implements SmsService {
         //存储手机号短信验证码发送总数[所有业务，用于限制每个手机号 24小时内发送总数]
         value = stringRedisTemplate.opsForValue().get(smsCodeTotalPhoneKey);
         Long expire = stringRedisTemplate.getExpire(smsCodeTotalPhoneKey);
-        if (StringUtils.hasText(value)) {
+        if (StrUtil.isNotBlank(value)) {
             stringRedisTemplate.opsForValue().set(smsCodeTotalPhoneKey, String.valueOf(Integer.parseInt(value) + 1), expire, TimeUnit.SECONDS);
         } else {
             stringRedisTemplate.opsForValue().set(smsCodeTotalPhoneKey, "1", SmsRedisKeyConstant.SMS_CODE_TOTAL_PHONE_EXPIRES_HOUR, TimeUnit.HOURS);
@@ -79,7 +79,7 @@ public class SmsServiceImpl implements SmsService {
         //存储IP短信验证码发送总数[所有业务，用于限制每个IP 24小时内发送总数]
         value = stringRedisTemplate.opsForValue().get(smsCodeTotalIpKey);
         expire = stringRedisTemplate.getExpire(smsCodeTotalIpKey);
-        if (StringUtils.hasText(value)) {
+        if (StrUtil.isNotBlank(value)) {
             stringRedisTemplate.opsForValue().set(smsCodeTotalIpKey, String.valueOf(Integer.parseInt(value) + 1), expire, TimeUnit.SECONDS);
         } else {
             stringRedisTemplate.opsForValue().set(smsCodeTotalIpKey, "1", SmsRedisKeyConstant.SMS_CODE_TOTAL_IP_EXPIRES_HOUR, TimeUnit.HOURS);
@@ -90,18 +90,18 @@ public class SmsServiceImpl implements SmsService {
 
     @Override
     public boolean checkSmsCode(String phone, SmsCodeType smsCodeType, String smsCode) {
-        if (!StringUtils.hasText(phone)) {
+        if (StrUtil.isBlank(phone)) {
             throw new SmsException("手机号不可为空");
         }
         if (ObjectUtils.isEmpty(smsCodeType)) {
             throw new SmsException("短信验证码类型不可为空");
         }
-        if (!StringUtils.hasText(smsCode)) {
+        if (StrUtil.isBlank(smsCode)) {
             throw new SmsException("短信验证码不可为空");
         }
         String smsCodeKey = getSmsCodeKey(phone, smsCodeType);
         String smsCodeValue = stringRedisTemplate.opsForValue().get(smsCodeKey);
-        if (!StringUtils.hasText(smsCodeValue)) {
+        if (StrUtil.isBlank(smsCodeValue)) {
             return false;
         }
         if (!smsCode.equals(smsCodeValue)) {

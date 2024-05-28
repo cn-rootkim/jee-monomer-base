@@ -17,9 +17,6 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 public class FilterConfig {
 
-//    @Autowired
-//    private ApplicationContext applicationContext;
-
     @Bean
     public FilterRegistrationBean corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -28,6 +25,7 @@ public class FilterConfig {
         config.addAllowedOriginPattern("*");//*表示允许所有
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
+        config.addExposedHeader("*");
         source.registerCorsConfiguration("/**", config); // CORS 配置对所有接口都有效
         FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
         bean.setOrder(0);

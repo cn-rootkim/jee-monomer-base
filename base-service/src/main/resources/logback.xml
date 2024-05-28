@@ -30,8 +30,6 @@
     </appender>
 
     <!-- 日志输出级别 -->
-    <logger name="org.apache" level="WARN" />
-    <logger name="httpclient" level="WARN" />
     <root level="info">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
@@ -39,7 +37,7 @@
     <logger name="net.rootkim.baseservice.mapper" level="DEBUG" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="net.rootkim.baseservice.config.ControllerAspect" level="DEBUG" additivity="false">
+    <logger name="net.rootkim.baseservice.filter" level="DEBUG" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 </configuration>

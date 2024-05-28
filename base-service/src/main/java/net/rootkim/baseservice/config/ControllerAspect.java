@@ -20,46 +20,49 @@ import java.util.*;
  * @author RootKim[rootkim.net]
  * @since 2024/5/13
  */
-@Aspect
-@Component
-@Slf4j
+//@Aspect
+//@Component
+//@Slf4j
 public class ControllerAspect {
 
-    @Before("execution(* net.rootkim.baseservice.controller..*.*(..))")
-    public void controllerBefore(JoinPoint joinPoint) {
-        ServletRequestAttributes attributes = (ServletRequestAttributes)
-                RequestContextHolder.getRequestAttributes();
-        assert attributes != null;
-        HttpServletRequest request = attributes.getRequest();
-        try {
-            log.debug("request start》》》\nIP:{}\nURL：{}\nheader:{}\nparam:{}", IPUtil.getIpAddr(request),
-                    request.getRequestURL().toString(),
-                    JSONObject.toJSONString(this.getHeader(request)), JSONObject.toJSONString(this.getRequestParams(joinPoint)));
-        } catch (Exception e) {
-            log.error("全局请求日志打印异常:", e);
-        }
-    }
-
-
-    @AfterReturning(value = "execution(* net.rootkim.baseservice.controller..*.*(..))", returning = "result")
-    public void controllerAfter(Object result) {
-        ServletRequestAttributes attributes = (ServletRequestAttributes)
-                RequestContextHolder.getRequestAttributes();
-        assert attributes != null;
-        HttpServletResponse response = attributes.getResponse();
-        Map<String, Object> headers = this.getHeader(response);
-        String resultStr;
-        if (headers.get("Content-Type") != null && headers.get("Content-Type").toString().contains("application/octet-stream;")) {
-            resultStr = "file download," + headers.get("Content-Disposition");
-        } else {
-            try{
-                resultStr = JSONObject.toJSONString(result);
-            } catch (Exception e){
-                resultStr = result.toString();
-            }
-        }
-        log.debug("response end》》》\nheader:{}\nresult:{}", headers, resultStr);
-    }
+//    @Before("execution(* net.rootkim.baseservice.controller..*.*(..))")
+//    public void controllerBefore(JoinPoint joinPoint) {
+//        ServletRequestAttributes attributes = (ServletRequestAttributes)
+//                RequestContextHolder.getRequestAttributes();
+//        assert attributes != null;
+//        HttpServletRequest request = attributes.getRequest();
+//        try {
+//            log.info("request start》》》\nIP:{}\nURL：{}\nheader:{}\nparam:{}", IPUtil.getIpAddr(request),
+//                    request.getRequestURL().toString(),
+//                    JSONObject.toJSONString(this.getHeader(request)), JSONObject.toJSONString(this.getRequestParams(joinPoint)));
+//        } catch (Exception e) {
+//            log.error("全局请求日志打印异常:", e);
+//        }
+//    }
+//
+//
+//    @AfterReturning(value = "execution(* net.rootkim.baseservice.controller..*.*(..))", returning = "result")
+//    public void controllerAfter(Object result) {
+//        ServletRequestAttributes attributes = (ServletRequestAttributes)
+//                RequestContextHolder.getRequestAttributes();
+//        assert attributes != null;
+//        HttpServletResponse response = attributes.getResponse();
+//        Map<String, Object> headers = this.getHeader(response);
+//        String resultStr;
+//        if (headers.get("Content-Type") != null && headers.get("Content-Type").toString().contains("application/octet-stream;")) {
+//            resultStr = "file download," + headers.get("Content-Disposition");
+//        } else {
+//            try{
+//                resultStr = JSONObject.toJSONString(result);
+//            } catch (Exception e){
+//                resultStr = result.toString();
+//            }
+//        }
+//        if(resultStr.length()>5000){
+//            resultStr = resultStr.substring(0,5000)+".........................";
+//        }
+//        log.debug("response end》》》\nheader:{}\nresult:{}", headers, resultStr);
+//    }
 
     /**
      * 获取入参
@@ -91,6 +94,14 @@ public class ControllerAspect {
             if (value instanceof MultipartFile) {
                 MultipartFile file = (MultipartFile) value;
                 value = file.getOriginalFilename();
+            } else if (value instanceof MultipartFile[]) {
+                MultipartFile[] fileList = (MultipartFile[]) value;
+                StringBuilder stringBuilder = new StringBuilder();
+                for (MultipartFile multipartFile : fileList) {
+                    stringBuilder.append(multipartFile.getOriginalFilename());
+                    stringBuilder.append(",");
+                }
+                value = stringBuilder.toString();
             }
             requestParams.put(paramNames[i], value);
         }

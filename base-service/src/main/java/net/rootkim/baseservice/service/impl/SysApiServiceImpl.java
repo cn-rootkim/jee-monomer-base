@@ -1,5 +1,6 @@
 package net.rootkim.baseservice.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import net.rootkim.baseservice.dao.SysApiDao;
 import net.rootkim.baseservice.domain.bo.SysApiBO;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,10 +47,10 @@ public class SysApiServiceImpl extends ServiceImpl<SysApiMapper, SysApi> impleme
 
     @Override
     public void add(SysApi sysApi) {
-        if (!StringUtils.hasText(sysApi.getApi())) {
+        if (StrUtil.isBlank(sysApi.getApi())) {
             throw new ParamException("接口不能为空");
         }
-        if (!StringUtils.hasText(sysApi.getSysApiBasePathId())) {
+        if (StrUtil.isBlank(sysApi.getSysApiBasePathId())) {
             throw new ParamException("接口父路径id不能为空");
         }
         this.save(sysApi);
@@ -83,10 +84,10 @@ public class SysApiServiceImpl extends ServiceImpl<SysApiMapper, SysApi> impleme
 
     @Override
     public void updateDBAndRedis(SysApi sysApi) {
-        if (!StringUtils.hasText(sysApi.getApi())) {
+        if (StrUtil.isBlank(sysApi.getApi())) {
             throw new ParamException("接口不能为空");
         }
-        if (!StringUtils.hasText(sysApi.getSysApiBasePathId())) {
+        if (StrUtil.isBlank(sysApi.getSysApiBasePathId())) {
             throw new ParamException("接口父路径id不能为空");
         }
         this.updateById(sysApi);

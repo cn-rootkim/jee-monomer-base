@@ -1,5 +1,6 @@
 package net.rootkim.baseservice.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import net.rootkim.baseservice.dao.SysUserRoleRelationDao;
 import net.rootkim.baseservice.mapper.SysUserRoleRelationMapper;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+
 
 import java.util.List;
 
@@ -33,10 +34,10 @@ public class SysUserRoleRelationServiceImpl extends ServiceImpl<SysUserRoleRelat
 
     @Override
     public void add(SysUserRoleRelation sysUserRoleRelation) {
-        if (!StringUtils.hasText(sysUserRoleRelation.getSysUserId())) {
+        if (StrUtil.isBlank(sysUserRoleRelation.getSysUserId())) {
             throw new ParamException("用户id不可为空");
         }
-        if (!StringUtils.hasText(sysUserRoleRelation.getSysRoleId())) {
+        if (StrUtil.isBlank(sysUserRoleRelation.getSysRoleId())) {
             throw new ParamException("角色id不可为空");
         }
         long count = this.count(new LambdaQueryWrapper<SysUserRoleRelation>()

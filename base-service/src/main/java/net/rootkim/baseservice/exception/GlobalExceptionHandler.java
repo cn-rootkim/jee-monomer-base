@@ -37,8 +37,7 @@ public class GlobalExceptionHandler {
         } else if (ex instanceof ForbiddenException) {//没有接口权限
             return new ResponseEntity(ResultVO.failed(ResultCode.FORBIDDEN), HttpStatus.OK);
         } else if (ex instanceof TokenExpiredException) {
-            log.error("Token已过期异常", ex);
-            return new ResponseEntity(ResultVO.failed(ex.getMessage()), HttpStatus.OK);
+            return new ResponseEntity(ResultVO.failed(ResultCode.TOKEN_EXPIRED), HttpStatus.OK);
         } else if (ex instanceof LoginException) {
             log.error("登录异常", ex);
             return new ResponseEntity(ResultVO.failed(ex.getMessage()), HttpStatus.OK);

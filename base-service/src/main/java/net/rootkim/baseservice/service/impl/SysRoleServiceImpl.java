@@ -1,5 +1,6 @@
 package net.rootkim.baseservice.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+
 
 import java.util.Collections;
 import java.util.List;
@@ -55,7 +56,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 
     @Override
     public void add(SysRole sysRole) {
-        if (!StringUtils.hasText(sysRole.getRoleKey())) {
+        if (StrUtil.isBlank(sysRole.getRoleKey())) {
             throw new ParamException("角色key不可为空");
         }
         if (!ObjectUtils.isEmpty(this.queryByKey(sysRole.getRoleKey()))) {
@@ -86,7 +87,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 
     @Override
     public void updateDBAndRedis(SysRole sysRole) {
-        if (!StringUtils.hasText(sysRole.getRoleKey())) {
+        if (StrUtil.isBlank(sysRole.getRoleKey())) {
             throw new ParamException("角色key不可为空");
         }
         long count = this.count(new LambdaQueryWrapper<SysRole>().eq(SysRole::getRoleKey, sysRole.getRoleKey()).ne(SysRole::getId, sysRole.getId()));
@@ -134,8 +135,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     public BasePageVO<SysRoleBO> page(PageDTO pageDTO) {
         BasePageVO<SysRoleBO> basePageVO = new BasePageVO<>(pageDTO.getCurrent(), pageDTO.getSize());
         Page<SysRole> page = new Page<>(pageDTO.getCurrent(), pageDTO.getSize());
-        this.page(page, new LambdaQueryWrapper<SysRole>().eq(StringUtils.hasText(pageDTO.getKey()), SysRole::getRoleKey, pageDTO.getKey())
-                .like(StringUtils.hasText(pageDTO.getName()), SysRole::getName, pageDTO.getName()));
+        this.page(page, new LambdaQueryWrapper<SysRole>().eq(StrUtil.isNotBlank(pageDTO.getKey()), SysRole::getRoleKey, pageDTO.getKey())
+                .like(StrUtil.isNotBlank(pageDTO.getName()), SysRole::getName, pageDTO.getName()));
 
         BeanUtils.copyProperties(page, basePageVO);
         if (!CollectionUtils.isEmpty(page.getRecords())) {

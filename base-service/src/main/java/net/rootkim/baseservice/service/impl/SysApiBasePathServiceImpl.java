@@ -1,5 +1,6 @@
 package net.rootkim.baseservice.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import net.rootkim.baseservice.dao.SysApiBasePathDao;
 import net.rootkim.baseservice.domain.bo.SysApiBasePathBO;
 import net.rootkim.baseservice.domain.dto.sysApiBasePath.ListDTO;
@@ -15,9 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
-import java.util.Collections;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +40,7 @@ public class SysApiBasePathServiceImpl extends ServiceImpl<SysApiBasePathMapper,
 
     @Override
     public void add(SysApiBasePath sysApiBasePath) {
-        if (!StringUtils.hasText(sysApiBasePath.getBasePath())) {
+        if (StrUtil.isBlank(sysApiBasePath.getBasePath())) {
             throw new ParamException("接口父路径不能为空");
         }
         this.save(sysApiBasePath);
@@ -64,7 +64,7 @@ public class SysApiBasePathServiceImpl extends ServiceImpl<SysApiBasePathMapper,
 
     @Override
     public void updateDBAndRedis(SysApiBasePath sysApiBasePath) {
-        if (!StringUtils.hasText(sysApiBasePath.getBasePath())) {
+        if (StrUtil.isBlank(sysApiBasePath.getBasePath())) {
             throw new ParamException("接口父路径不能为空");
         }
         this.updateById(sysApiBasePath);
@@ -106,7 +106,7 @@ public class SysApiBasePathServiceImpl extends ServiceImpl<SysApiBasePathMapper,
         }).collect(Collectors.toList());
         if (listDTO.getIsNeedApiList()) {
             for (SysApiBasePathBO sysApiBasePathBO : list) {
-                if (StringUtils.hasText(listDTO.getRoleId())) {
+                if (StrUtil.isNotBlank(listDTO.getRoleId())) {
                     sysApiBasePathBO.setSysApiBOList(sysApiService.queryByBasePathIdAndRoleId(sysApiBasePathBO.getId(), listDTO.getRoleId()));
                 } else {
                     sysApiBasePathBO.setSysApiBOList(sysApiService.queryByBasePathId(sysApiBasePathBO.getId()));
