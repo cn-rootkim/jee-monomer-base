@@ -1,15 +1,10 @@
 package net.rootkim.core.utils;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
 import net.rootkim.core.constant.EncryptSecretConstant;
 import net.rootkim.core.exception.ParamException;
-import org.springframework.util.StringUtils;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 密码相关工具类
@@ -19,16 +14,16 @@ import java.security.NoSuchAlgorithmException;
  */
 public class PasswordUtil {
 
-    public static String encrypt(String password) throws UnsupportedEncodingException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        return AesUtil.encrypt(password, EncryptSecretConstant.AES_SECRET);
+    public static String encrypt(String password) {
+        return StrUtil.str(SecureUtil.aes(EncryptSecretConstant.AES_SECRET.getBytes(StandardCharsets.UTF_8)).encrypt(password), StandardCharsets.UTF_8);
     }
 
-    public static String decrypt(String password) throws UnsupportedEncodingException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        return AesUtil.decrypt(password, EncryptSecretConstant.AES_SECRET);
+    public static String decrypt(String password) {
+        return SecureUtil.aes(EncryptSecretConstant.AES_SECRET.getBytes(StandardCharsets.UTF_8)).decryptStr(password);
     }
 
     public static void check(String password) {
-        if (!StringUtils.hasText(password)) {
+        if (StrUtil.isBlank(password)) {
             throw new ParamException("密码不可为空");
         } else {
             if (password.length() < 6 || password.length() > 20) {

@@ -1,5 +1,6 @@
 package net.rootkim.core.utils;
 
+import cn.hutool.core.io.FileUtil;
 import com.aspose.cad.Color;
 import com.aspose.cad.Image;
 import com.aspose.cad.License;
@@ -30,7 +31,7 @@ public class CadUtil {
     }
 
     public static void signPdf(String source, String signImg, String target, float absoluteX, float absoluteY) throws Exception {
-        byte[] bytes = FileUtil.readByte(source);
+        byte[] bytes = FileUtil.readBytes(source);
         PdfReader pdfReader = new PdfReader(bytes);
         PdfStamper pdfStamper = new PdfStamper(pdfReader, Files.newOutputStream(Paths.get(target)));
 

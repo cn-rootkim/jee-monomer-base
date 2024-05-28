@@ -1,5 +1,6 @@
 package net.rootkim.baseservice.dao.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import net.rootkim.baseservice.dao.SysUserDao;
 import net.rootkim.baseservice.domain.po.SysUser;
@@ -10,7 +11,7 @@ import net.rootkim.core.domain.bo.Platform;
 import net.rootkim.core.utils.JWTUtil;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+
 
 import java.util.concurrent.TimeUnit;
 
@@ -65,7 +66,7 @@ public class SysUserDaoImpl extends BaseDao implements SysUserDao {
 
     @Override
     public boolean checkToken(String userId, Platform platform, String userType, String token) {
-        if (!StringUtils.hasText(userId) || !StringUtils.hasText(userType) || !StringUtils.hasText(token)) {
+        if (StrUtil.isBlank(userId) || StrUtil.isBlank(userType) || StrUtil.isBlank(token)) {
             return false;
         }
         //根据客户端平台和用户id生成redisKey
@@ -76,7 +77,7 @@ public class SysUserDaoImpl extends BaseDao implements SysUserDao {
         redisKey.append(":");
         redisKey.append(userId);
         String redisToken = stringRedisTemplate.opsForValue().get(redisKey.toString());
-        if (StringUtils.hasText(redisToken) && redisToken.equals(token)) {
+        if (StrUtil.isNotBlank(redisToken) && redisToken.equals(token)) {
             return true;
         }
         return false;

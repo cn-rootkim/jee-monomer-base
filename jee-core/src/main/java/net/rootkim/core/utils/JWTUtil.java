@@ -1,14 +1,15 @@
 package net.rootkim.core.utils;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.auth0.jwt.interfaces.JWTVerifier;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.jwt.JWT;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * JWT工具类
+ *
  * @author RootKim[net.rootkim]
  * @since 2024/3/10
  */
@@ -16,45 +17,39 @@ public class JWTUtil {
 
     /**
      * 生成JWTToken
-     * @param secret 密钥
-     * @param userId 用户id
+     *
+     * @param secret   密钥
+     * @param userId   用户id
      * @param userType 用户类型
      * @return JWTToken
      */
-    public static String create(String secret, String userId, Byte userType){
-        HashMap<String, Object> headers = new HashMap<>();
-        return JWT.create()
-                // 第一部分Header
-                .withHeader(headers)
-                .withJWTId(IDUtil.getUUID32())
-                // 第二部分Payload
-                .withClaim("userId", userId)
-                .withClaim("userType", userType.toString())
-                // 第三部分Signature
-                .sign(Algorithm.HMAC256(secret));
+    public static String create(String secret, String userId, Byte userType) {
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("id", IdUtil.fastSimpleUUID());
+        payload.put("userId", userId);
+        payload.put("userType", userType);
+        return cn.hutool.jwt.JWTUtil.createToken(payload, secret.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
      * 获取用户id
-     * @param secret 密钥
+     *
      * @param JWTToken
      * @return
      */
-    public static String getUserId(String secret, String JWTToken){
-        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(secret)).build();
-        DecodedJWT verify = jwtVerifier.verify(JWTToken);
-        return verify.getClaim("userId").asString();
+    public static String getUserId(String JWTToken) {
+        JWT jwt = cn.hutool.jwt.JWTUtil.parseToken(JWTToken);
+        return jwt.getPayload("userId").toString();
     }
 
     /**
      * 获取用户类型
-     * @param secret 密钥
+     *
      * @param JWTToken
      * @return
      */
-    public static String getUserType(String secret, String JWTToken){
-        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(secret)).build();
-        DecodedJWT verify = jwtVerifier.verify(JWTToken);
-        return verify.getClaim("userType").asString();
+    public static String getUserType(String JWTToken) {
+        JWT jwt = cn.hutool.jwt.JWTUtil.parseToken(JWTToken);
+        return jwt.getPayload("userType").toString();
     }
 }

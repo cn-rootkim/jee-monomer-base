@@ -1,5 +1,6 @@
 package net.rootkim.baseservice.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import net.rootkim.baseservice.dao.SysRoleApiRelationDao;
 import net.rootkim.baseservice.domain.po.SysRoleApiRelation;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+
 
 import java.util.List;
 
@@ -33,10 +34,10 @@ public class SysRoleApiRelationServiceImpl extends ServiceImpl<SysRoleApiRelatio
 
     @Override
     public void add(SysRoleApiRelation sysRoleApiRelation) {
-        if (!StringUtils.hasText(sysRoleApiRelation.getSysRoleId())) {
+        if (StrUtil.isBlank(sysRoleApiRelation.getSysRoleId())) {
             throw new ParamException("系统角色id不可为空");
         }
-        if (!StringUtils.hasText(sysRoleApiRelation.getSysApiId())) {
+        if (StrUtil.isBlank(sysRoleApiRelation.getSysApiId())) {
             throw new ParamException("系统接口id不可为空");
         }
         long count = this.count(new LambdaQueryWrapper<SysRoleApiRelation>().eq(SysRoleApiRelation::getSysRoleId, sysRoleApiRelation.getSysRoleId())

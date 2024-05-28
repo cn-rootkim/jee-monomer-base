@@ -1,6 +1,6 @@
 package net.rootkim.baseservice.util;
 
-import net.rootkim.core.utils.OkHttpUtil;
+import cn.hutool.http.HttpUtil;
 
 /**
  * 微信小程序工具类
@@ -22,7 +22,7 @@ public class WxXcxUtil {
         url.append("&js_code=");
         url.append(code);
         url.append("&grant_type=authorization_code");
-        String resp = OkHttpUtil.sendGet(url.toString());
+        String resp = HttpUtil.get(url.toString());
         return null;
     }
 }

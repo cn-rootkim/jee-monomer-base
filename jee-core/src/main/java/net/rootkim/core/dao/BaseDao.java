@@ -1,11 +1,12 @@
 package net.rootkim.core.dao;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class BaseDao {
     protected StringRedisTemplate stringRedisTemplate;
 
     protected <T> T getOne(String key, Class<T> clazz) {
-        if (!StringUtils.hasText(key)) {
+        if (StrUtil.isBlank(key)) {
             return null;
         }
         String objectStr = stringRedisTemplate.opsForValue().get(key);

@@ -1,5 +1,6 @@
 package net.rootkim.baseservice.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import net.rootkim.baseservice.dao.AdminMenuDao;
 import net.rootkim.baseservice.domain.bo.AdminMenuBO;
 import net.rootkim.baseservice.domain.dto.adminMenu.ListTreeDTO;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class AdminMenuServiceImpl extends ServiceImpl<AdminMenuMapper, AdminMenu
 
     @Override
     public void add(AdminMenu adminMenu) {
-        if (!StringUtils.hasText(adminMenu.getName())) {
+        if (StrUtil.isBlank(adminMenu.getName())) {
             throw new ParamException("菜单名称不能为空");
         }
         this.save(adminMenu);
@@ -88,7 +89,7 @@ public class AdminMenuServiceImpl extends ServiceImpl<AdminMenuMapper, AdminMenu
 
     @Override
     public void updateDBAndRedis(AdminMenu adminMenu) {
-        if (!StringUtils.hasText(adminMenu.getName())) {
+        if (StrUtil.isBlank(adminMenu.getName())) {
             throw new ParamException("菜单名称不能为空");
         }
         this.updateById(adminMenu);
@@ -166,7 +167,7 @@ public class AdminMenuServiceImpl extends ServiceImpl<AdminMenuMapper, AdminMenu
         List<AdminMenuBO> adminMenuTreeBOList = new ArrayList<>();
         //递归出菜单Tree
         for (AdminMenuBO adminMenuBO : adminMenuBOList) {
-            if (!StringUtils.hasText(adminMenuBO.getParentId())) {
+            if (StrUtil.isBlank(adminMenuBO.getParentId())) {
                 AdminMenuBO adminMenuTreeBO = new AdminMenuBO();
                 BeanUtils.copyProperties(adminMenuBO, adminMenuTreeBO);
                 recursionAdminMenuTreeBO(adminMenuTreeBO, adminMenuBOList);

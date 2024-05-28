@@ -1,17 +1,12 @@
 package net.rootkim.baseservice.filter;
 
-import lombok.AllArgsConstructor;
+import cn.hutool.core.util.StrUtil;
 import net.rootkim.baseservice.dao.SysUserDao;
 import net.rootkim.baseservice.service.SysApiBasePathService;
 import net.rootkim.baseservice.service.SysApiService;
-import net.rootkim.baseservice.service.SysRoleApiRelationService;
-import net.rootkim.baseservice.service.SysUserRoleRelationService;
-import net.rootkim.core.constant.EncryptSecretConstant;
 import net.rootkim.core.domain.bo.Platform;
 import net.rootkim.baseservice.domain.po.SysApi;
 import net.rootkim.baseservice.domain.po.SysApiBasePath;
-import net.rootkim.baseservice.domain.po.SysRoleApiRelation;
-import net.rootkim.baseservice.domain.po.SysUserRoleRelation;
 import net.rootkim.core.exception.BusinessException;
 import net.rootkim.core.exception.ForbiddenException;
 import net.rootkim.core.exception.TokenExpiredException;
@@ -20,16 +15,14 @@ import net.rootkim.core.utils.HttpHeaderUtil;
 import net.rootkim.core.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,7 +55,7 @@ public class TokenFilter implements Filter {
             "/swagger-resources.*",
             "/v2/.*",
             "/doc.html",
-            "/webjars/.*"
+            "/webjars/.*",
     };
 
     /**
@@ -80,10 +73,10 @@ public class TokenFilter implements Filter {
             String requestURI = request.getRequestURI();
             String userId = null;
             String userType = null;
-            if (StringUtils.hasText(token)) {
+            if (StrUtil.isNotBlank(token)) {
                 try {
-                    userId = JWTUtil.getUserId(EncryptSecretConstant.JWT_SECRET, token);
-                    userType = JWTUtil.getUserType(EncryptSecretConstant.JWT_SECRET, token);
+                    userId = JWTUtil.getUserId(token);
+                    userType = JWTUtil.getUserType(token);
                 } catch (Exception e) {
                     resolver.resolveException((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse, null, new BusinessException("token非法"));
                     return;
@@ -96,7 +89,7 @@ public class TokenFilter implements Filter {
                 servletRequest.setAttribute(HttpHeaderUtil.USER_TYPE_KEY, userType);
             }
             //放行无需登录的接口白名单
-            if (!StringUtils.hasText(token)) {
+            if (StrUtil.isBlank(token)) {
                 for (String apiWhite : apiWhiteList) {
                     Pattern pattern = Pattern.compile("^" + apiWhite + "$");
                     Matcher matcher = pattern.matcher(requestURI);
@@ -108,7 +101,7 @@ public class TokenFilter implements Filter {
                 resolver.resolveException((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse, null, new UnauthorizedException("未登录"));
                 return;
             }
-            if (!StringUtils.hasText(userId) || !StringUtils.hasText(userType)) {
+            if (StrUtil.isBlank(userId) || StrUtil.isBlank(userType)) {
                 resolver.resolveException((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse, null, new BusinessException("token非法"));
                 return;
             }
