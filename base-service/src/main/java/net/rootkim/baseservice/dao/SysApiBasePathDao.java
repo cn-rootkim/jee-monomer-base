@@ -14,6 +14,8 @@ public interface SysApiBasePathDao {
 
     void delById(String id);
 
+    void delAll();
+
     List<SysApiBasePath> queryAll();
 
     SysApiBasePath queryById(String id);

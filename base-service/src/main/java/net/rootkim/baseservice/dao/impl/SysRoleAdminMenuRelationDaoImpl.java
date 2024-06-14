@@ -42,6 +42,13 @@ public class SysRoleAdminMenuRelationDaoImpl extends BaseDao implements SysRoleA
     }
 
     @Override
+    public void delAll() {
+        StringBuilder key = new StringBuilder(RoleRedisKeyConstant.SYS_ROLE_ADMIN_MENU_RELATION);
+        key.append("*");
+        stringRedisTemplate.delete(key.toString());
+    }
+
+    @Override
     public void delByRoleId(String roleId) {
         StringBuilder key = new StringBuilder(RoleRedisKeyConstant.SYS_ROLE_ADMIN_MENU_RELATION);
         key.append("*_");

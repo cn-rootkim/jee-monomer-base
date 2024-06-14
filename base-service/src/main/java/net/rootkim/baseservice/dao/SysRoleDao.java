@@ -16,6 +16,8 @@ public interface SysRoleDao {
 
     void delByKey(String roleKey);
 
+    void delAll();
+
     List<SysRole> queryAll();
 
     SysRole queryById(String id);

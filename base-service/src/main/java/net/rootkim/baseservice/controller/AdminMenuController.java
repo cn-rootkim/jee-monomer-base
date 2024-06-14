@@ -3,6 +3,7 @@ package net.rootkim.baseservice.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import net.rootkim.baseservice.domain.bo.AdminMenuBO;
 import net.rootkim.baseservice.domain.dto.adminMenu.AddDTO;
 import net.rootkim.baseservice.domain.dto.adminMenu.ListTreeDTO;
@@ -13,7 +14,6 @@ import net.rootkim.core.domain.dto.BaseBatchDeleteDTO;
 import net.rootkim.core.domain.vo.ResultVO;
 import net.rootkim.core.utils.HttpHeaderUtil;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,10 +30,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/adminMenu")
 @Api(tags = "管理系统菜单")
+@RequiredArgsConstructor
 public class AdminMenuController {
 
-    @Autowired
-    private AdminMenuService adminMenuService;
+    private final AdminMenuService adminMenuService;
 
     @PostMapping("add")
     @ApiOperation("新增菜单")

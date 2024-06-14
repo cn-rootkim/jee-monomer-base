@@ -35,6 +35,7 @@
         <itextpdf.version>5.5.11</itextpdf.version>
         <javassist.version>3.28.0-GA</javassist.version>
         <dysmsapi20170525.version>2.0.24</dysmsapi20170525.version>
+        <bcprov-jdk15to18.version>1.68</bcprov-jdk15to18.version>
     </properties>
 
     <dependencyManagement>
@@ -153,6 +154,13 @@
                 <groupId>com.aliyun</groupId>
                 <artifactId>dysmsapi20170525</artifactId>
                 <version>${dysmsapi20170525.version}</version>
+            </dependency>
+
+            <!--PKCS7Padding-->
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15to18</artifactId>
+                <version>${bcprov-jdk15to18.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

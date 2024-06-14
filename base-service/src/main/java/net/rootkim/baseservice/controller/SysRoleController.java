@@ -3,6 +3,7 @@ package net.rootkim.baseservice.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import net.rootkim.baseservice.domain.bo.SysRoleBO;
 import net.rootkim.baseservice.domain.dto.sysRole.*;
 import net.rootkim.baseservice.domain.po.SysRole;
@@ -31,10 +32,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/sysRole")
 @Api(tags = "角色")
+@RequiredArgsConstructor
 public class SysRoleController {
 
-    @Autowired
-    private SysRoleService sysRoleService;
+    private final SysRoleService sysRoleService;
 
     @PostMapping("add")
     @ApiOperation("新增角色")

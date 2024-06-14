@@ -2,6 +2,7 @@ package net.rootkim.baseservice.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import lombok.RequiredArgsConstructor;
 import net.rootkim.baseservice.dao.SysApiDao;
 import net.rootkim.baseservice.domain.bo.SysApiBO;
 import net.rootkim.baseservice.domain.po.SysRoleApiRelation;
@@ -36,14 +37,12 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class SysApiServiceImpl extends ServiceImpl<SysApiMapper, SysApi> implements SysApiService {
 
-    @Autowired
-    private SysApiDao sysApiDao;
-    @Autowired
-    private SysRoleApiRelationService sysRoleApiRelationService;
-    @Autowired
-    private SysUserRoleRelationService sysUserRoleRelationService;
+    private final SysApiDao sysApiDao;
+    private final SysRoleApiRelationService sysRoleApiRelationService;
+    private final SysUserRoleRelationService sysUserRoleRelationService;
 
     @Override
     public void add(SysApi sysApi) {
@@ -153,5 +152,17 @@ public class SysApiServiceImpl extends ServiceImpl<SysApiMapper, SysApi> impleme
             sysApiBO.setIsAuth(sysRoleApiRelations.stream().anyMatch(sysRoleApiRelation -> sysApiBO.getId().equals(sysRoleApiRelation.getSysApiId())));
         }
         return list;
+    }
+
+    @Override
+    public void reloadCache() {
+        sysApiDao.delAll();
+        this.queryAll();
+    }
+
+    @Override
+    public void reloadCache(String id) {
+        sysApiDao.delById(id);
+        this.queryById(id);
     }
 }

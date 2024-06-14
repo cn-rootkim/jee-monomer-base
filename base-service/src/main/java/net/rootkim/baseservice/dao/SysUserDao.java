@@ -19,5 +19,7 @@ public interface SysUserDao {
 
     void delById(String id);
 
+    void delAll();
+
     SysUser queryById(String id);
 }

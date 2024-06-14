@@ -4,6 +4,7 @@ import net.rootkim.baseservice.domain.bo.SysApiBasePathBO;
 import net.rootkim.baseservice.domain.dto.sysApiBasePath.ListDTO;
 import net.rootkim.baseservice.domain.po.SysApiBasePath;
 import com.baomidou.mybatisplus.extension.service.IService;
+import net.rootkim.core.service.BaseCacheService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  * @author RootKim[rootkim.net]
  * @since 2024-04-29
  */
-public interface SysApiBasePathService extends IService<SysApiBasePath> {
+public interface SysApiBasePathService extends IService<SysApiBasePath>, BaseCacheService {
 
     void add(SysApiBasePath sysApiBasePath);
 

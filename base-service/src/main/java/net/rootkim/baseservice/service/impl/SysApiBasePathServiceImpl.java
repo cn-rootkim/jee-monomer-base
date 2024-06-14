@@ -1,6 +1,7 @@
 package net.rootkim.baseservice.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import lombok.RequiredArgsConstructor;
 import net.rootkim.baseservice.dao.SysApiBasePathDao;
 import net.rootkim.baseservice.domain.bo.SysApiBasePathBO;
 import net.rootkim.baseservice.domain.dto.sysApiBasePath.ListDTO;
@@ -31,12 +32,11 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class SysApiBasePathServiceImpl extends ServiceImpl<SysApiBasePathMapper, SysApiBasePath> implements SysApiBasePathService {
 
-    @Autowired
-    private SysApiBasePathDao sysApiBasePathDao;
-    @Autowired
-    private SysApiService sysApiService;
+    private final SysApiBasePathDao sysApiBasePathDao;
+    private final SysApiService sysApiService;
 
     @Override
     public void add(SysApiBasePath sysApiBasePath) {
@@ -114,5 +114,17 @@ public class SysApiBasePathServiceImpl extends ServiceImpl<SysApiBasePathMapper,
             }
         }
         return list;
+    }
+
+    @Override
+    public void reloadCache() {
+        sysApiBasePathDao.delAll();
+        this.queryAll();
+    }
+
+    @Override
+    public void reloadCache(String id) {
+        sysApiBasePathDao.delById(id);
+        this.queryById(id);
     }
 }

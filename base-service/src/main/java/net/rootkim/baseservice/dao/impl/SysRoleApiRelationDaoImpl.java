@@ -42,6 +42,13 @@ public class SysRoleApiRelationDaoImpl extends BaseDao implements SysRoleApiRela
     }
 
     @Override
+    public void delAll() {
+        StringBuilder key = new StringBuilder(RoleRedisKeyConstant.SYS_ROLE_API_RELATION);
+        key.append("*");
+        stringRedisTemplate.delete(key.toString());
+    }
+
+    @Override
     public void delByRoleId(String roleId) {
         StringBuilder key = new StringBuilder(RoleRedisKeyConstant.SYS_ROLE_API_RELATION);
         key.append("*_");

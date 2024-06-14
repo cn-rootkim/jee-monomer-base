@@ -1,6 +1,7 @@
 package net.rootkim.baseservice.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import lombok.RequiredArgsConstructor;
 import net.rootkim.baseservice.dao.AdminMenuDao;
 import net.rootkim.baseservice.domain.bo.AdminMenuBO;
 import net.rootkim.baseservice.domain.dto.adminMenu.ListTreeDTO;
@@ -37,16 +38,13 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class AdminMenuServiceImpl extends ServiceImpl<AdminMenuMapper, AdminMenu> implements AdminMenuService {
 
-    @Autowired
-    private AdminMenuDao adminMenuDao;
-    @Autowired
-    private AdminMenuFunctionService adminMenuFunctionService;
-    @Autowired
-    private SysRoleAdminMenuRelationService sysRoleAdminMenuRelationService;
-    @Autowired
-    private SysUserRoleRelationService sysUserRoleRelationService;
+    private final AdminMenuDao adminMenuDao;
+    private final SysRoleAdminMenuRelationService sysRoleAdminMenuRelationService;
+    private final SysUserRoleRelationService sysUserRoleRelationService;
+    private final AdminMenuFunctionService adminMenuFunctionService;
 
     @Override
     public void add(AdminMenu adminMenu) {
@@ -205,5 +203,17 @@ public class AdminMenuServiceImpl extends ServiceImpl<AdminMenuMapper, AdminMenu
                 recursionAdminMenu(adminmenu, adminMenuAll, adminMenus);
             }
         });
+    }
+
+    @Override
+    public void reloadCache() {
+        adminMenuDao.delAll();
+        this.queryAll();
+    }
+
+    @Override
+    public void reloadCache(String id) {
+        adminMenuDao.delById(id);
+        this.queryById(id);
     }
 }

@@ -35,6 +35,13 @@ public class AdminMenuDaoImpl extends BaseDao implements AdminMenuDao {
     }
 
     @Override
+    public void delAll() {
+        StringBuilder key = new StringBuilder(RoleRedisKeyConstant.ADMIN_MENU);
+        key.append("*");
+        stringRedisTemplate.delete(key.toString());
+    }
+
+    @Override
     public List<AdminMenu> queryAll() {
         StringBuilder key = new StringBuilder(RoleRedisKeyConstant.ADMIN_MENU);
         key.append("*");

@@ -14,6 +14,8 @@ public interface SysApiDao {
 
     void delById(String id);
 
+    void delAll();
+
     List<SysApi> queryAll();
 
     SysApi queryById(String id);

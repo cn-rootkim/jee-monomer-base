@@ -2,6 +2,7 @@ package net.rootkim.baseservice.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import net.rootkim.baseservice.domain.dto.sysApi.AddDTO;
 import net.rootkim.baseservice.domain.dto.sysApi.UpdateDTO;
 import net.rootkim.baseservice.domain.po.SysApi;
@@ -28,10 +29,10 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/sysApi")
 @Api(tags = "接口")
+@RequiredArgsConstructor
 public class SysApiController {
 
-    @Autowired
-    private SysApiService sysApiService;
+    private final SysApiService sysApiService;
 
     @PostMapping("add")
     @ApiOperation("新增接口")

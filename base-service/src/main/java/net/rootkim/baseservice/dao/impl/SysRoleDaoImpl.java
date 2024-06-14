@@ -48,6 +48,13 @@ public class SysRoleDaoImpl extends BaseDao implements SysRoleDao {
     }
 
     @Override
+    public void delAll() {
+        StringBuilder key = new StringBuilder(RoleRedisKeyConstant.SYS_ROLE);
+        key.append("*");
+        stringRedisTemplate.delete(key.toString());
+    }
+
+    @Override
     public List<SysRole> queryAll() {
         StringBuilder key = new StringBuilder(RoleRedisKeyConstant.SYS_ROLE);
         key.append("*");

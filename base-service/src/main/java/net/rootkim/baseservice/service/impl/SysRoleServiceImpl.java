@@ -2,10 +2,9 @@ package net.rootkim.baseservice.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.RequiredArgsConstructor;
 import net.rootkim.baseservice.dao.SysRoleDao;
-import net.rootkim.baseservice.dao.impl.SysRoleDaoImpl;
 import net.rootkim.baseservice.domain.bo.SysRoleBO;
 import net.rootkim.baseservice.domain.dto.sysRole.AuthApiDTO;
 import net.rootkim.baseservice.domain.dto.sysRole.AuthMenuDTO;
@@ -19,13 +18,13 @@ import net.rootkim.core.domain.vo.BasePageVO;
 import net.rootkim.core.exception.ParamException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,19 +38,15 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
+//@RequiredArgsConstructor
 public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> implements SysRoleService {
 
     @Autowired
     private SysRoleDao sysRoleDao;
-    @Autowired
     private SysUserRoleRelationService sysUserRoleRelationService;
-    @Autowired
     private SysRoleApiRelationService sysRoleApiRelationService;
-    @Autowired
     private SysRoleAdminMenuRelationService sysRoleAdminMenuRelationService;
-    @Autowired
     private SysRoleAdminMenuFunctionRelationService sysRoleAdminMenuFunctionRelationService;
-    @Autowired
     private SysUserService sysUserService;
 
     @Override
@@ -173,7 +168,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     @Override
     public void authMenuFunction(AuthMenuFunctionDTO authMenuFunctionDTO) {
         //删除角色_管理系统菜单功能关联数据
-        sysRoleAdminMenuFunctionRelationService.delByRoleIdAndAdminMenuId(authMenuFunctionDTO.getRoleId(), authMenuFunctionDTO.getMenuId());
+//        sysRoleAdminMenuFunctionRelationService.delByRoleIdAndAdminMenuId(authMenuFunctionDTO.getRoleId(), authMenuFunctionDTO.getMenuId());
         //新增角色_管理系统菜单功能关联数据
         if (!CollectionUtils.isEmpty(authMenuFunctionDTO.getMenuFunctionIdList())) {
             for (String menuFunctionId : authMenuFunctionDTO.getMenuFunctionIdList()) {
@@ -196,5 +191,17 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
             sysRoleApiRelation.setSysApiId(apiId);
             sysRoleApiRelationService.add(sysRoleApiRelation);
         });
+    }
+
+    @Override
+    public void reloadCache() {
+        sysRoleDao.delAll();
+        this.queryAll();
+    }
+
+    @Override
+    public void reloadCache(String id) {
+        sysRoleDao.delById(id);
+        this.queryById(id);
     }
 }

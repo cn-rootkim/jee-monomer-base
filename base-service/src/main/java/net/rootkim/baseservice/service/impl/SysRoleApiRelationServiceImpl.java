@@ -2,6 +2,7 @@ package net.rootkim.baseservice.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import lombok.RequiredArgsConstructor;
 import net.rootkim.baseservice.dao.SysRoleApiRelationDao;
 import net.rootkim.baseservice.domain.po.SysRoleApiRelation;
 import net.rootkim.baseservice.mapper.SysRoleApiRelationMapper;
@@ -27,10 +28,10 @@ import java.util.List;
  */
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class SysRoleApiRelationServiceImpl extends ServiceImpl<SysRoleApiRelationMapper, SysRoleApiRelation> implements SysRoleApiRelationService {
 
-    @Autowired
-    private SysRoleApiRelationDao sysRoleApiRelationDao;
+    private final SysRoleApiRelationDao sysRoleApiRelationDao;
 
     @Override
     public void add(SysRoleApiRelation sysRoleApiRelation) {
@@ -114,5 +115,17 @@ public class SysRoleApiRelationServiceImpl extends ServiceImpl<SysRoleApiRelatio
             }
         }
         return sysRoleApiRelations;
+    }
+
+    @Override
+    public void reloadCache() {
+        sysRoleApiRelationDao.delAll();
+        this.queryAll();
+    }
+
+    @Override
+    public void reloadCache(String id) {
+        sysRoleApiRelationDao.delById(id);
+        this.queryById(id);
     }
 }

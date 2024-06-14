@@ -1,5 +1,6 @@
 package net.rootkim.baseservice.filter;
 
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import net.rootkim.baseservice.dao.SysUserDao;
 import net.rootkim.baseservice.service.SysApiBasePathService;
@@ -19,12 +20,11 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import springfox.documentation.spring.web.plugins.Docket;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author RootKim[rootkim.net]
@@ -56,6 +56,8 @@ public class TokenFilter implements Filter {
             "/v2/.*",
             "/doc.html",
             "/webjars/.*",
+            "/test/.*",
+            "/cache/.*"
     };
 
     /**
@@ -64,6 +66,8 @@ public class TokenFilter implements Filter {
     private final static String[] apiLoggedInWhiteList = new String[]{
             "/sysUser/logout",
     };
+    @Autowired
+    private Docket api;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
@@ -91,9 +95,7 @@ public class TokenFilter implements Filter {
             //放行无需登录的接口白名单
             if (StrUtil.isBlank(token)) {
                 for (String apiWhite : apiWhiteList) {
-                    Pattern pattern = Pattern.compile("^" + apiWhite + "$");
-                    Matcher matcher = pattern.matcher(requestURI);
-                    if (matcher.matches()) {
+                    if (ReUtil.isMatch(StrUtil.format("^{}$", apiWhite), requestURI)) {
                         filterChain.doFilter(servletRequest, servletResponse);
                         return;
                     }
@@ -111,9 +113,7 @@ public class TokenFilter implements Filter {
             }
             //放行登录后的接口白名单
             for (String apiLoggedInWhite : apiLoggedInWhiteList) {
-                Pattern pattern = Pattern.compile("^" + apiLoggedInWhite + "$");
-                Matcher matcher = pattern.matcher(requestURI);
-                if (matcher.matches()) {
+                if (ReUtil.isMatch(StrUtil.format("^{}$", apiLoggedInWhite),requestURI)) {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }

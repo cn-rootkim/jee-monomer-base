@@ -3,6 +3,8 @@ package net.rootkim.baseservice.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import net.rootkim.baseservice.dao.SysUserDao;
 import net.rootkim.baseservice.domain.bo.SysUserBO;
 import net.rootkim.baseservice.domain.dto.sysUser.PageDTO;
@@ -25,13 +27,13 @@ import net.rootkim.core.exception.ParamException;
 import net.rootkim.core.utils.PasswordUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,16 +47,13 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements SysUserService {
 
-    @Autowired
-    private SysUserDao sysUserDao;
-    @Autowired
-    private SysUserRoleRelationService sysUserRoleRelationService;
-    @Autowired
-    private SysRoleService sysRoleService;
-    @Autowired
-    private SmsService smsService;
+    private final SysUserDao sysUserDao;
+    private final SysUserRoleRelationService sysUserRoleRelationService;
+    private final SysRoleService sysRoleService;
+    private final SmsService smsService;
 
     @Override
     public void add(SysUser sysUser, List<String> roleIdList) {
@@ -436,5 +435,22 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new ParamException("用户类型不可为空");
         }
         sysUserDao.delToken(userId, platform, userType);
+    }
+
+    @Override
+    public void reloadCache() {
+        sysUserDao.delAll();
+        List<SysUser> list = this.list();
+        if (!CollectionUtils.isEmpty(list)) {
+            list.forEach(sysUser -> {
+                sysUserDao.add(sysUser);
+            });
+        }
+    }
+
+    @Override
+    public void reloadCache(String id) {
+        sysUserDao.delById(id);
+        this.queryById(id);
     }
 }

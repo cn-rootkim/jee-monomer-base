@@ -2,6 +2,7 @@ package net.rootkim.baseservice.service;
 
 import net.rootkim.baseservice.domain.po.SysRoleAdminMenuFunctionRelation;
 import com.baomidou.mybatisplus.extension.service.IService;
+import net.rootkim.core.service.BaseCacheService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  * @author RootKim[rootkim.net]
  * @since 2024-04-29
  */
-public interface SysRoleAdminMenuFunctionRelationService extends IService<SysRoleAdminMenuFunctionRelation> {
+public interface SysRoleAdminMenuFunctionRelationService extends IService<SysRoleAdminMenuFunctionRelation>, BaseCacheService {
 
     void add(SysRoleAdminMenuFunctionRelation sysRoleAdminMenuFunctionRelation);
 
@@ -24,7 +25,7 @@ public interface SysRoleAdminMenuFunctionRelationService extends IService<SysRol
 
     void delByAdminMenuFunctionId(String adminMenuFunctionId);
 
-    void delByRoleIdAndAdminMenuId(String roleId, String adminMenuId);
+    void delByRoleIdAndAdminMenuFunctionId(String roleId, String adminMenuFunctionId);
 
     List<SysRoleAdminMenuFunctionRelation> queryAll();
 

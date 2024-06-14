@@ -2,23 +2,22 @@ package net.rootkim.baseservice.filter;
 
 import cn.hutool.core.io.IoUtil;
 
+import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author RootKim[rootkim.net]
  * @since 2024/5/28
  */
 public class RequestWrapper extends HttpServletRequestWrapper {
-    private byte[] requestBody = new byte[0];
+    private byte[] body = new byte[0];
     private boolean bufferFilled = false;
-
-    private ConcurrentHashMap<String, String> cxmHeaders = new ConcurrentHashMap<>();
 
     public RequestWrapper(HttpServletRequest request) {
         super(request);
@@ -26,30 +25,44 @@ public class RequestWrapper extends HttpServletRequestWrapper {
 
     @Override
     public ServletInputStream getInputStream() throws IOException {
-        return new CachedServletInputStream(getRequestBody());
+        return new CachedServletInputStream(getBody());
     }
 
-    @Override
-    public String getHeader(String name) {
-        String headerValue = cxmHeaders.get(name);
-        if (headerValue != null) {
-            return headerValue;
-        } else {
-            return super.getHeader(name);
-        }
-    }
-
-    public void setHeader(String name, String value){
-        this.cxmHeaders.put(name, value);
-    }
-
-    public byte[] getRequestBody() throws IOException {
+    public byte[] getBody() throws IOException {
         if (bufferFilled) {
-            return Arrays.copyOf(requestBody, requestBody.length);
+            return Arrays.copyOf(body, body.length);
         }
         InputStream inputStream = super.getInputStream();
-        requestBody = IoUtil.readBytes(inputStream);
+        body = IoUtil.readBytes(inputStream);
         bufferFilled = true;
-        return requestBody;
+        return body;
+    }
+
+    public class CachedServletInputStream extends ServletInputStream {
+        private ByteArrayInputStream buffer;
+
+        public CachedServletInputStream(byte[] contents) {
+            this.buffer = new ByteArrayInputStream(contents);
+        }
+
+        @Override
+        public boolean isFinished() {
+            return buffer.available() == 0;
+        }
+
+        @Override
+        public boolean isReady() {
+            return true;
+        }
+
+        @Override
+        public void setReadListener(ReadListener readListener) {
+            throw new RuntimeException("Not implemented");
+        }
+
+        @Override
+        public int read() throws IOException {
+            return buffer.read();
+        }
     }
 }

@@ -1,7 +1,6 @@
 package net.rootkim.baseservice.filter;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.WriteListener;
@@ -32,13 +31,6 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
         return new ServletOutputStreamWrapper(this.byteArrayOutputStream , this.response);
     }
 
-    @Override
-    public PrintWriter getWriter() throws IOException {
-        return new PrintWriter(new OutputStreamWriter(this.byteArrayOutputStream , this.response.getCharacterEncoding()));
-    }
-
-
-    @Data
     @AllArgsConstructor
     private static class ServletOutputStreamWrapper extends ServletOutputStream {
 
