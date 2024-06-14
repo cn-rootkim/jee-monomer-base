@@ -9,6 +9,7 @@ import com.aspose.cad.imageoptions.PdfOptions;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -32,21 +33,31 @@ public class CadUtil {
 
     public static void signPdf(String source, String signImg, String target, float absoluteX, float absoluteY) throws Exception {
         byte[] bytes = FileUtil.readBytes(source);
-        PdfReader pdfReader = new PdfReader(bytes);
-        PdfStamper pdfStamper = new PdfStamper(pdfReader, Files.newOutputStream(Paths.get(target)));
-
-        com.itextpdf.text.Image image = com.itextpdf.text.Image.getInstance(signImg);
-        //设置签字图片宽高
+        PdfReader pdfReader = null;
+        PdfStamper pdfStamper = null;
+        try {
+            pdfReader = new PdfReader(bytes);
+            pdfStamper = new PdfStamper(pdfReader, Files.newOutputStream(Paths.get(target)));
+            pdfStamper.setEncryption("".getBytes(), "".getBytes(), PdfWriter.AllowCopy | PdfWriter.AllowPrinting, PdfWriter.STANDARD_ENCRYPTION_40);
+            com.itextpdf.text.Image image = com.itextpdf.text.Image.getInstance(signImg);
+            //设置签字图片宽高
 //        image.scaleAbsolute(200, 200);
-
-        int pageCount = pdfReader.getNumberOfPages();
-        for (int i = 1; i <= pageCount; i++) {
-            PdfContentByte content = pdfStamper.getUnderContent(i);
-            image.setAbsolutePosition(absoluteX, absoluteY);
-            content.addImage(image);
+            int pageCount = pdfReader.getNumberOfPages();
+            for (int i = 1; i <= pageCount; i++) {
+                PdfContentByte content = pdfStamper.getUnderContent(i);
+                image.setAbsolutePosition(absoluteX, absoluteY);
+                content.addImage(image);
+            }
+        } catch (Exception exception) {
+            throw exception;
+        } finally {
+            if (pdfStamper != null) {
+                pdfStamper.close();
+            }
+            if (pdfReader != null) {
+                pdfReader.close();
+            }
         }
-        pdfStamper.close();
-        pdfReader.close();
     }
 
     /**
