@@ -1,5 +1,10 @@
 package net.rootkim.core.constant;
 
+import net.rootkim.core.domain.bo.CacheBO;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 权限RedisKey常量类
  *
@@ -8,10 +13,12 @@ package net.rootkim.core.constant;
  */
 public class RoleRedisKeyConstant {
 
+    public static List<CacheBO> cacheBOList = null;
+
     /**
      * 存储用户token的KEY
      */
-    public static final String SYS_USER_TOKEN = "sysUser:token:";//平台:用户id
+    public static final String SYS_USER_TOKEN = "token:user:";//用户类型:平台:用户id
     public static final int SYS_USER_TOKEN_EXPIRES_DAY = 7;//系统用户存储token的有效时间（天）
 
     /**
@@ -66,4 +73,5 @@ public class RoleRedisKeyConstant {
      * 存储角色_管理系统菜单功能关联数据的KEY
      */
     public static final String SYS_ROLE_ADMIN_MENU_FUNCTION_RELATION = "sys_role_admin_menu_function_relation:";//关联id_角色id_管理系统菜单功能id
+
 }

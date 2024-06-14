@@ -14,6 +14,8 @@ public interface AdminMenuDao {
 
     void delById(String id);
 
+    void delAll();
+
     List<AdminMenu> queryAll();
 
     AdminMenu queryById(String id);

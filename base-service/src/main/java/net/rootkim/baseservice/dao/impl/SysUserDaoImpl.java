@@ -105,4 +105,11 @@ public class SysUserDaoImpl extends BaseDao implements SysUserDao {
         key.append(id);
         return super.getOne(key.toString(), SysUser.class);
     }
+
+    @Override
+    public void delAll() {
+        StringBuilder key = new StringBuilder(RoleRedisKeyConstant.SYS_USER);
+        key.append("*");
+        stringRedisTemplate.delete(key.toString());
+    }
 }

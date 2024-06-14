@@ -2,6 +2,7 @@ package net.rootkim.baseservice.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import lombok.RequiredArgsConstructor;
 import net.rootkim.baseservice.dao.AdminMenuFunctionDao;
 import net.rootkim.baseservice.domain.bo.AdminMenuFunctionBO;
 import net.rootkim.baseservice.domain.dto.adminMenuFunction.ListDTO;
@@ -13,7 +14,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.rootkim.baseservice.service.SysRoleAdminMenuFunctionRelationService;
 import net.rootkim.core.exception.ParamException;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -33,12 +33,11 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class AdminMenuFunctionServiceImpl extends ServiceImpl<AdminMenuFunctionMapper, AdminMenuFunction> implements AdminMenuFunctionService {
 
-    @Autowired
-    private AdminMenuFunctionDao adminMenuFunctionDao;
-    @Autowired
-    private SysRoleAdminMenuFunctionRelationService sysRoleAdminMenuFunctionRelationService;
+    private final AdminMenuFunctionDao adminMenuFunctionDao;
+    private final SysRoleAdminMenuFunctionRelationService sysRoleAdminMenuFunctionRelationService;
 
     @Override
     public void add(AdminMenuFunction adminMenuFunction) {
@@ -154,5 +153,22 @@ public class AdminMenuFunctionServiceImpl extends ServiceImpl<AdminMenuFunctionM
             }
         }
         return list;
+    }
+
+    @Override
+    public void delSysRoleAdminMenuFunctionRelationByRoleIdAndAdminMenuId(String roleId, String adminMenuId) {
+
+    }
+
+    @Override
+    public void reloadCache() {
+        adminMenuFunctionDao.delAll();
+        this.queryAll();
+    }
+
+    @Override
+    public void reloadCache(String id) {
+        adminMenuFunctionDao.delById(id);
+        this.queryById(id);
     }
 }

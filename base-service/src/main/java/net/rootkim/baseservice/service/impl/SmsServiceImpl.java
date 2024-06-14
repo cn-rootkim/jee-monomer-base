@@ -3,6 +3,7 @@ package net.rootkim.baseservice.service.impl;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rootkim.baseservice.service.SmsService;
 import net.rootkim.core.constant.SmsRedisKeyConstant;
@@ -22,10 +23,10 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class SmsServiceImpl implements SmsService {
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private final StringRedisTemplate stringRedisTemplate;
 
     @Override
     public void sendSmsCode(String phone, String ip, SmsCodeType smsCodeType, String userId) throws Exception {

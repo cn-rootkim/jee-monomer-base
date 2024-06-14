@@ -14,6 +14,8 @@ public interface SysRoleApiRelationDao {
 
     void delById(String id);
 
+    void delAll();
+
     void delByRoleId(String roleId);
 
     void delByApiId(String apiId);

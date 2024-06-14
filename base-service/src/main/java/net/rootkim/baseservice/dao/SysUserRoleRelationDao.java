@@ -14,6 +14,8 @@ public interface SysUserRoleRelationDao {
 
     void delById(String id);
 
+    void delAll();
+
     void delByUserId(String userId);
 
     void delByRoleId(String roleId);

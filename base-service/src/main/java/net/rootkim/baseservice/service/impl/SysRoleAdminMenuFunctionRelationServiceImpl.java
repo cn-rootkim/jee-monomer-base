@@ -2,6 +2,7 @@ package net.rootkim.baseservice.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import lombok.RequiredArgsConstructor;
 import net.rootkim.baseservice.dao.SysRoleAdminMenuFunctionRelationDao;
 import net.rootkim.baseservice.dao.SysUserRoleRelationDao;
 import net.rootkim.baseservice.dao.impl.SysUserRoleRelationDaoImpl;
@@ -16,6 +17,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.rootkim.baseservice.service.SysUserRoleRelationService;
 import net.rootkim.core.exception.ParamException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -37,14 +39,12 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class SysRoleAdminMenuFunctionRelationServiceImpl extends ServiceImpl<SysRoleAdminMenuFunctionRelationMapper, SysRoleAdminMenuFunctionRelation> implements SysRoleAdminMenuFunctionRelationService {
 
-    @Autowired
-    private SysRoleAdminMenuFunctionRelationDao sysRoleAdminMenuFunctionRelationDao;
-    @Autowired
-    private SysUserRoleRelationService sysUserRoleRelationService;
-    @Autowired
-    private AdminMenuFunctionService adminMenuFunctionService;
+    private final SysRoleAdminMenuFunctionRelationDao sysRoleAdminMenuFunctionRelationDao;
+
+    private final SysUserRoleRelationService sysUserRoleRelationService;
 
     @Override
     public void add(SysRoleAdminMenuFunctionRelation sysRoleAdminMenuFunctionRelation) {
@@ -86,14 +86,11 @@ public class SysRoleAdminMenuFunctionRelationServiceImpl extends ServiceImpl<Sys
     }
 
     @Override
-    public void delByRoleIdAndAdminMenuId(String roleId, String adminMenuId) {
-        List<AdminMenuFunction> adminMenuFunctions = adminMenuFunctionService.queryByAdminMenuId(adminMenuId);
+    public void delByRoleIdAndAdminMenuFunctionId(String roleId, String adminMenuFunctionId) {
         this.remove(new LambdaQueryWrapper<SysRoleAdminMenuFunctionRelation>()
                 .eq(SysRoleAdminMenuFunctionRelation::getSysRoleId, roleId)
-                .in(SysRoleAdminMenuFunctionRelation::getAdminMenuFunctionId, adminMenuFunctions.stream().map(AdminMenuFunction::getId).collect(Collectors.toList())));
-        for (AdminMenuFunction adminMenuFunction : adminMenuFunctions) {
-            sysRoleAdminMenuFunctionRelationDao.delByRoleIdAndAdminMenuFunctionId(roleId, adminMenuFunction.getId());
-        }
+                .eq(SysRoleAdminMenuFunctionRelation::getAdminMenuFunctionId, adminMenuFunctionId));
+        sysRoleAdminMenuFunctionRelationDao.delByRoleIdAndAdminMenuFunctionId(roleId, adminMenuFunctionId);
     }
 
     @Override
@@ -154,5 +151,17 @@ public class SysRoleAdminMenuFunctionRelationServiceImpl extends ServiceImpl<Sys
             }
         }
         return sysRoleAdminMenuFunctionRelations;
+    }
+
+    @Override
+    public void reloadCache() {
+        sysRoleAdminMenuFunctionRelationDao.delAll();
+        this.queryAll();
+    }
+
+    @Override
+    public void reloadCache(String id) {
+        sysRoleAdminMenuFunctionRelationDao.delById(id);
+        this.queryById(id);
     }
 }

@@ -8,6 +8,7 @@ import net.rootkim.baseservice.domain.dto.sysUser.InfoDTO;
 import net.rootkim.core.domain.bo.OpenIdType;
 import net.rootkim.core.domain.bo.Platform;
 import net.rootkim.core.domain.vo.BasePageVO;
+import net.rootkim.core.service.BaseCacheService;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ import java.util.List;
  * @author RootKim[rootkim.net]
  * @since 2024-04-28
  */
-public interface SysUserService extends IService<SysUser> {
+public interface SysUserService extends IService<SysUser>, BaseCacheService {
 
     void add(SysUser sysUser, List<String> roleIdList);
 

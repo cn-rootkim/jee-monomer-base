@@ -40,6 +40,6 @@ public class FfmpegUtil {
         FileUtil.writeUtf8String(filePaths, fileList.getPath());
         //合成ts为mp4
         String result = RuntimeUtil.execForStr(StrUtil.format("ffmpeg -f concat -safe 0 -i {}  -c copy {}", fileList.getPath(), mp4FilePath));
-        log.info("ffmpeg result=\n{}", result);
+//        log.info("ffmpeg result=\n{}", result);
     }
 }

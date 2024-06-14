@@ -18,6 +18,12 @@
         <module>base-service</module>
     </modules>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.13</version>
+    </parent>
+
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -35,19 +41,11 @@
         <itextpdf.version>5.5.11</itextpdf.version>
         <javassist.version>3.28.0-GA</javassist.version>
         <dysmsapi20170525.version>2.0.24</dysmsapi20170525.version>
+        <bcprov-jdk15to18.version>1.68</bcprov-jdk15to18.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- SpringBoot的依赖配置-->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.6.13</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
             <!--mysql驱动-->
             <dependency>
                 <groupId>mysql</groupId>
@@ -153,6 +151,13 @@
                 <groupId>com.aliyun</groupId>
                 <artifactId>dysmsapi20170525</artifactId>
                 <version>${dysmsapi20170525.version}</version>
+            </dependency>
+
+            <!--PKCS7Padding-->
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15to18</artifactId>
+                <version>${bcprov-jdk15to18.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

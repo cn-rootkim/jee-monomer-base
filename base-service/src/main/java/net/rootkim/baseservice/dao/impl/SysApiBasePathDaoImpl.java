@@ -35,6 +35,13 @@ public class SysApiBasePathDaoImpl extends BaseDao implements SysApiBasePathDao 
     }
 
     @Override
+    public void delAll() {
+        StringBuilder key = new StringBuilder(RoleRedisKeyConstant.SYS_API_BASE_PATH);
+        key.append("*");
+        stringRedisTemplate.delete(key.toString());
+    }
+
+    @Override
     public List<SysApiBasePath> queryAll() {
         StringBuilder key = new StringBuilder(RoleRedisKeyConstant.SYS_API_BASE_PATH);
         key.append("*");

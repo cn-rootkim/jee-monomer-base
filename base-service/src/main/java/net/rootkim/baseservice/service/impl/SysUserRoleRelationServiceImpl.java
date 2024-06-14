@@ -2,6 +2,8 @@ package net.rootkim.baseservice.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import net.rootkim.baseservice.dao.SysUserRoleRelationDao;
 import net.rootkim.baseservice.mapper.SysUserRoleRelationMapper;
 import net.rootkim.baseservice.service.SysUserRoleRelationService;
@@ -27,10 +29,10 @@ import java.util.List;
  */
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class SysUserRoleRelationServiceImpl extends ServiceImpl<SysUserRoleRelationMapper, SysUserRoleRelation> implements SysUserRoleRelationService {
 
-    @Autowired
-    private SysUserRoleRelationDao sysUserRoleRelationDao;
+    private final SysUserRoleRelationDao sysUserRoleRelationDao;
 
     @Override
     public void add(SysUserRoleRelation sysUserRoleRelation) {
@@ -115,5 +117,17 @@ public class SysUserRoleRelationServiceImpl extends ServiceImpl<SysUserRoleRelat
             }
         }
         return sysUserRoleRelations;
+    }
+
+    @Override
+    public void reloadCache() {
+        sysUserRoleRelationDao.delAll();
+        this.queryAll();
+    }
+
+    @Override
+    public void reloadCache(String id) {
+        sysUserRoleRelationDao.delById(id);
+        this.queryById(id);
     }
 }

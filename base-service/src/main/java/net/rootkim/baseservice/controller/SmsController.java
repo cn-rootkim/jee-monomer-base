@@ -2,6 +2,7 @@ package net.rootkim.baseservice.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import net.rootkim.baseservice.domain.dto.sms.SendSmsCodeDTO;
 import net.rootkim.baseservice.service.SmsService;
 import net.rootkim.core.domain.vo.ResultVO;
@@ -20,10 +21,10 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("sms")
 @Api(tags = "短信")
+@RequiredArgsConstructor
 public class SmsController {
 
-    @Autowired
-    private SmsService smsService;
+    private final SmsService smsService;
 
     @PostMapping("sendSmsCode")
     @ApiOperation("发送短信验证码")

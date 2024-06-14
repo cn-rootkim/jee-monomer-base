@@ -3,6 +3,7 @@ package net.rootkim.baseservice.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import net.rootkim.baseservice.domain.bo.AdminMenuFunctionBO;
 import net.rootkim.baseservice.domain.dto.adminMenuFunction.AddDTO;
 import net.rootkim.baseservice.domain.dto.adminMenuFunction.ListDTO;
@@ -30,10 +31,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/adminMenuFunction")
 @Api(tags = "管理系统菜单功能")
+@RequiredArgsConstructor
 public class AdminMenuFunctionController {
 
-    @Autowired
-    private AdminMenuFunctionService adminMenuFunctionService;
+    private final AdminMenuFunctionService adminMenuFunctionService;
 
     @PostMapping("add")
     @ApiOperation("新增菜单功能")

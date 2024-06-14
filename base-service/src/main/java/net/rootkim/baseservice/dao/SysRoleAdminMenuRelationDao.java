@@ -14,6 +14,8 @@ public interface SysRoleAdminMenuRelationDao {
 
     void delById(String id);
 
+    void delAll();
+
     void delByRoleId(String roleId);
 
     void delByAdminMenuId(String adminMenuId);

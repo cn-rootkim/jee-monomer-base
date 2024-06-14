@@ -2,6 +2,7 @@ package net.rootkim.baseservice.service;
 
 import net.rootkim.baseservice.domain.po.SysRoleApiRelation;
 import com.baomidou.mybatisplus.extension.service.IService;
+import net.rootkim.core.service.BaseCacheService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  * @author RootKim[rootkim.net]
  * @since 2024-04-29
  */
-public interface SysRoleApiRelationService extends IService<SysRoleApiRelation> {
+public interface SysRoleApiRelationService extends IService<SysRoleApiRelation>, BaseCacheService {
 
     void add(SysRoleApiRelation sysRoleApiRelation);
 

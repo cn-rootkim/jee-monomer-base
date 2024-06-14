@@ -40,6 +40,13 @@ public class AdminMenuFunctionDaoImpl extends BaseDao implements AdminMenuFuncti
     }
 
     @Override
+    public void delAll() {
+        StringBuilder key = new StringBuilder(RoleRedisKeyConstant.ADMIN_MENU_FUNCTION);
+        key.append("*");
+        stringRedisTemplate.delete(key.toString());
+    }
+
+    @Override
     public void delByAdminMenuId(String adminMenuId) {
         StringBuilder key = new StringBuilder(RoleRedisKeyConstant.ADMIN_MENU_FUNCTION);
         key.append("*_");

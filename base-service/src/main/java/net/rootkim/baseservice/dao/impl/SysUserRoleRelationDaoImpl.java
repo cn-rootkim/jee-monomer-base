@@ -42,6 +42,13 @@ public class SysUserRoleRelationDaoImpl extends BaseDao implements SysUserRoleRe
     }
 
     @Override
+    public void delAll() {
+        StringBuilder key = new StringBuilder(RoleRedisKeyConstant.SYS_USER_ROLE_RELATION);
+        key.append("*");
+        stringRedisTemplate.delete(key.toString());
+    }
+
+    @Override
     public void delByUserId(String userId) {
         StringBuilder key = new StringBuilder(RoleRedisKeyConstant.SYS_USER_ROLE_RELATION);
         key.append("*_");

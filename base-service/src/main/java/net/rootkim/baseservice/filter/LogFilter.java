@@ -3,6 +3,7 @@ package net.rootkim.baseservice.filter;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import net.rootkim.core.utils.IPUtil;
 import org.springframework.core.annotation.Order;
@@ -25,62 +26,49 @@ import java.util.Enumeration;
 public class LogFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest requestWrapper = null;
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
         try {
-            requestWrapper = new RequestWrapper(request);
-            StringBuilder stringBuilder = new StringBuilder("request start》》》\nip:");
-            stringBuilder.append(IPUtil.getIpAddr(request));
-            stringBuilder.append("\nurl：");
-            stringBuilder.append(request.getRequestURI());
-            stringBuilder.append("\nheader:{");
+            HttpServletRequest request = (HttpServletRequest) servletRequest;
+            RequestWrapper requestWrapper = new RequestWrapper(request);
+            JSONObject header = new JSONObject();
             Enumeration<String> headerNames = request.getHeaderNames();
             while (headerNames.hasMoreElements()) {
                 String name = headerNames.nextElement();
                 String value = request.getHeader(name);
-                stringBuilder.append("\n  " + name + ":" + value);
+                header.put(name, value);
             }
-            stringBuilder.append("\n}");
-            stringBuilder.append("\nparameter:{");
+            JSONObject parameter = new JSONObject();
             Enumeration<String> parameterNames = request.getParameterNames();
             while (parameterNames.hasMoreElements()) {
                 String name = parameterNames.nextElement();
                 Object value = request.getParameter(name);
-                stringBuilder.append("\n  " + name + ":" + value);
+                parameter.put(name, value);
             }
-            stringBuilder.append("\n}");
-            stringBuilder.append("\nbody:");
-            InputStream inputStream = requestWrapper.getInputStream();
-            String body = IoUtil.read(inputStream, CharsetUtil.CHARSET_UTF_8);
-            stringBuilder.append(body);
-            stringBuilder.append("\nattribute:{");
+            JSONObject attribute = new JSONObject();
             Enumeration<String> attributeNames = request.getAttributeNames();
             while (attributeNames.hasMoreElements()) {
                 String name = attributeNames.nextElement();
                 Object value = request.getAttribute(name);
-                stringBuilder.append("\n  " + name + ":" + value);
+                attribute.put(name, value);
             }
-            stringBuilder.append("\n}");
-            log.info(stringBuilder.toString());
-        } catch (Exception e) {
-            log.error("全局请求日志打印异常:", e);
-        } finally {
+            String body = StrUtil.str(requestWrapper.getBody(), CharsetUtil.CHARSET_UTF_8);
+            log.info(StrUtil.format("request start》》》\nip:{}\nurl：{}\nheader:{}\nparameter:{}\nattribute:{}\nbody:{}",
+                    IPUtil.getIpAddr(request), request.getRequestURI(), header.toJSONString(), parameter.toJSONString(), attribute.toJSONString(), body));
+
+            HttpServletResponse response = (HttpServletResponse) servletResponse;
             ResponseWrapper responseWrapper = new ResponseWrapper(response);
             filterChain.doFilter(requestWrapper, responseWrapper);
-            StringBuilder stringBuilder = new StringBuilder("response start》》》\nurl:");
-            stringBuilder.append(request.getRequestURI());
-            stringBuilder.append("\nheader:{");
+            header = new JSONObject();
             for (String headerName : responseWrapper.getHeaderNames()) {
-                stringBuilder.append("\n  " + headerName + ":" + responseWrapper.getHeader(headerName));
+                header.put(headerName, responseWrapper.getHeader(headerName));
             }
-            stringBuilder.append("\n}");
+            body = null;
             if (responseWrapper.getContentType().contains("json")) {
-                stringBuilder.append("\nbody:");
-                byte[] body = responseWrapper.getBody();
-                stringBuilder.append(StrUtil.str(body, CharsetUtil.CHARSET_UTF_8));
+                byte[] bodyByte = responseWrapper.getBody();
+                body = StrUtil.str(bodyByte, CharsetUtil.CHARSET_UTF_8);
             }
-            log.debug(stringBuilder.toString());
+            log.debug(StrUtil.format("response start》》》\nurl:{}\nheader:{}\nbody:{}", request.getRequestURI(), header, body));
+        } catch (Exception e) {
+            log.error("全局请求日志打印异常:", e);
         }
     }
 }

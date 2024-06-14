@@ -35,6 +35,13 @@ public class SysApiDaoImpl extends BaseDao implements SysApiDao {
     }
 
     @Override
+    public void delAll() {
+        StringBuilder key = new StringBuilder(RoleRedisKeyConstant.SYS_API);
+        key.append("*");
+        stringRedisTemplate.delete(key.toString());
+    }
+
+    @Override
     public List<SysApi> queryAll() {
         StringBuilder key = new StringBuilder(RoleRedisKeyConstant.SYS_API);
         key.append("*");

@@ -3,6 +3,7 @@ package net.rootkim.baseservice.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import net.rootkim.baseservice.domain.bo.SysUserBO;
 import net.rootkim.baseservice.domain.dto.sysUser.*;
 import net.rootkim.baseservice.domain.po.SysUser;
@@ -29,10 +30,10 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/sysUser")
 @Api(tags = "用户")
+@RequiredArgsConstructor
 public class SysUserController {
 
-    @Autowired
-    private SysUserService sysUserService;
+    private final SysUserService sysUserService;
 
     @ApiOperation("新增用户")
     @PostMapping("add")

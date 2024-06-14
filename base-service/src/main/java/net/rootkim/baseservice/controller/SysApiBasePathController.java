@@ -3,6 +3,7 @@ package net.rootkim.baseservice.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import net.rootkim.baseservice.domain.bo.SysApiBasePathBO;
 import net.rootkim.baseservice.domain.dto.sysApiBasePath.AddDTO;
 import net.rootkim.baseservice.domain.dto.sysApiBasePath.ListDTO;
@@ -32,10 +33,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/sysApiBasePath")
 @Api(tags = "接口父路径")
+@RequiredArgsConstructor
 public class SysApiBasePathController {
 
-    @Autowired
-    private SysApiBasePathService sysApiBasePathService;
+    private final SysApiBasePathService sysApiBasePathService;
 
     @PostMapping("add")
     @ApiOperation("新增接口父路径")

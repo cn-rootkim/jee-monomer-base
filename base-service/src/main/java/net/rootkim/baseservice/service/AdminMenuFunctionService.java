@@ -4,6 +4,7 @@ import net.rootkim.baseservice.domain.bo.AdminMenuFunctionBO;
 import net.rootkim.baseservice.domain.dto.adminMenuFunction.ListDTO;
 import net.rootkim.baseservice.domain.po.AdminMenuFunction;
 import com.baomidou.mybatisplus.extension.service.IService;
+import net.rootkim.core.service.BaseCacheService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  * @author RootKim[rootkim.net]
  * @since 2024-04-29
  */
-public interface AdminMenuFunctionService extends IService<AdminMenuFunction> {
+public interface AdminMenuFunctionService extends IService<AdminMenuFunction>, BaseCacheService {
 
     void add(AdminMenuFunction adminMenuFunction);
 
@@ -33,4 +34,6 @@ public interface AdminMenuFunctionService extends IService<AdminMenuFunction> {
     AdminMenuFunction queryById(String id);
 
     List<AdminMenuFunctionBO> list(ListDTO listDTO, String userId);
+
+    void delSysRoleAdminMenuFunctionRelationByRoleIdAndAdminMenuId(String roleId, String adminMenuId);
 }
