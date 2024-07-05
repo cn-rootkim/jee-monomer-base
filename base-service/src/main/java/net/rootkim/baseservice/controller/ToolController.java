@@ -6,10 +6,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ZipUtil;
 import io.swagger.annotations.*;
 import net.rootkim.core.utils.CadUtil;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -36,16 +33,10 @@ public class ToolController {
 
     @PostMapping("cadSign")
     @ApiOperation("cad签章")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "signImgFile", value = "签章图片", required = true),
-            @ApiImplicitParam(name = "cadFiles", value = "cad文件列表", required = true),
-            @ApiImplicitParam(name = "postionX", value = "签章位置X", required = true),
-            @ApiImplicitParam(name = "postionY", value = "签章位置Y", required = true)
-    })
-    public void cadSign(@RequestParam("signImgFile") MultipartFile signImgFile,
-                        @RequestParam("cadFiles") MultipartFile[] cadFiles,
-                        @RequestParam("postionX") Float postionX,
-                        @RequestParam("postionY") Float postionY,
+    public void cadSign(@ApiParam (value = "签章图片",required = true) @RequestPart("signImgFile") MultipartFile signImgFile,
+                        @ApiParam (value = "cad文件列表",required = true) @RequestPart("cadFiles") MultipartFile[] cadFiles,
+                        @ApiParam (value = "签章位置X",required = true) @RequestParam("postionX") Float postionX,
+                        @ApiParam (value = "签章位置Y",required = true) @RequestParam("postionY") Float postionY,
                         HttpServletResponse response) throws Exception {
         //本次请求工作的文件夹
         String dirPath = basePath + IdUtil.fastSimpleUUID() + "/";
