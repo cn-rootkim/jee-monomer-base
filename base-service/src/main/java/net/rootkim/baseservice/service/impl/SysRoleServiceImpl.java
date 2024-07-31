@@ -38,15 +38,20 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
-//@RequiredArgsConstructor
 public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> implements SysRoleService {
 
     @Autowired
     private SysRoleDao sysRoleDao;
+    @Autowired
     private SysUserRoleRelationService sysUserRoleRelationService;
+    @Autowired
     private SysRoleApiRelationService sysRoleApiRelationService;
+    @Autowired
     private SysRoleAdminMenuRelationService sysRoleAdminMenuRelationService;
+    @Autowired
     private SysRoleAdminMenuFunctionRelationService sysRoleAdminMenuFunctionRelationService;
+    @Autowired
+    @Lazy
     private SysUserService sysUserService;
 
     @Override

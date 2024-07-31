@@ -39,7 +39,7 @@ public class AdminMenuController {
     @ApiOperation("新增菜单")
     public ResultVO add(@Valid @RequestBody AddDTO addDTO, @RequestAttribute(HttpHeaderUtil.USER_ID_KEY) String userId) {
         AdminMenu adminMenu = new AdminMenu();
-        BeanUtils.copyProperties(adminMenu, addDTO);
+        BeanUtils.copyProperties(addDTO, adminMenu);
         adminMenuService.add(adminMenu);
         return ResultVO.success();
     }

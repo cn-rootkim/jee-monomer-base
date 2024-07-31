@@ -28,46 +28,56 @@ import java.util.Set;
  */
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class CacheServiceImpl implements CacheService {
 
-//    private final SysUserService sysUserService;
-//    private final SysRoleService sysRoleService;
-    private final StringRedisTemplate stringRedisTemplate;
-//    private final SysApiBasePathService sysApiBasePathService;
-//    private final SysApiService sysApiService;
-//    private final AdminMenuService adminMenuService;
-//    private final AdminMenuFunctionService adminMenuFunctionService;
-//    private final SysUserRoleRelationService sysUserRoleRelationService;
-//    private final SysRoleApiRelationService sysRoleApiRelationService;
-//    private final SysRoleAdminMenuRelationService sysRoleAdminMenuRelationService;
-//    private final SysRoleAdminMenuFunctionRelationService sysRoleAdminMenuFunctionRelationService;
+    @Autowired
+    private SysUserService sysUserService;
+    @Autowired
+    private SysRoleService sysRoleService;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private SysApiBasePathService sysApiBasePathService;
+    @Autowired
+    private SysApiService sysApiService;
+    @Autowired
+    private AdminMenuService adminMenuService;
+    @Autowired
+    private AdminMenuFunctionService adminMenuFunctionService;
+    @Autowired
+    private SysUserRoleRelationService sysUserRoleRelationService;
+    @Autowired
+    private SysRoleApiRelationService sysRoleApiRelationService;
+    @Autowired
+    private SysRoleAdminMenuRelationService sysRoleAdminMenuRelationService;
+    @Autowired
+    private SysRoleAdminMenuFunctionRelationService sysRoleAdminMenuFunctionRelationService;
 
     @PostConstruct
     public void init() {
-//        RoleRedisKeyConstant.cacheBOList = new ArrayList<>();
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_USER_TOKEN, "用户token"));
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_USER, "用户数据", sysUserService));
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_ROLE, "角色数据", sysRoleService));
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_API_BASE_PATH, "接口父路径数据", sysApiBasePathService));
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_API, "接口数据", sysApiService));
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.ADMIN_MENU, "管理系统菜单数据", adminMenuService));
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.ADMIN_MENU_FUNCTION, "管理系统菜单功能数据", adminMenuFunctionService));
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_USER_ROLE_RELATION, "用户_角色关联数据", sysUserRoleRelationService));
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_ROLE_API_RELATION, "角色_接口关联数据", sysRoleApiRelationService));
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_ROLE_ADMIN_MENU_RELATION, "角色_管理系统菜单关联数据", sysRoleAdminMenuRelationService));
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_ROLE_ADMIN_MENU_FUNCTION_RELATION, "角色_管理系统菜单功能关联数据", sysRoleAdminMenuFunctionRelationService));
-//
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(SmsRedisKeyConstant.SMS_CODE_RECORD, "手机号短信验证码发送记录"));
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(SmsRedisKeyConstant.SMS_CODE_TOTAL_PHONE, "手机号短信验证码发送总数"));
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(SmsRedisKeyConstant.SMS_CODE_TOTAL_IP, "IP短信验证码发送总数"));
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(SmsRedisKeyConstant.SMS_CODE_LOGIN, "短信验证码[登录业务]"));
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(SmsRedisKeyConstant.SMS_CODE_REGISTER, "短信验证码[注册业务]"));
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(SmsRedisKeyConstant.SMS_CODE_UPDATE_LOGIN_PASSWORD, "短信验证码[修改登录密码业务]"));
-//        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(SmsRedisKeyConstant.SMS_CODE_UPDATE_PAY_PASSWORD, "短信验证码[修改支付密码业务]"));
-//        for (CacheBO cacheBO : RoleRedisKeyConstant.cacheBOList) {
-//            cacheBO.setKeyPrefix(cacheBO.getKeyPrefix() + "*");
-//        }
+        RoleRedisKeyConstant.cacheBOList = new ArrayList<>();
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_USER_TOKEN, "用户token"));
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_USER, "用户数据", sysUserService));
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_ROLE, "角色数据", sysRoleService));
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_API_BASE_PATH, "接口父路径数据", sysApiBasePathService));
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_API, "接口数据", sysApiService));
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.ADMIN_MENU, "管理系统菜单数据", adminMenuService));
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.ADMIN_MENU_FUNCTION, "管理系统菜单功能数据", adminMenuFunctionService));
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_USER_ROLE_RELATION, "用户_角色关联数据", sysUserRoleRelationService));
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_ROLE_API_RELATION, "角色_接口关联数据", sysRoleApiRelationService));
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_ROLE_ADMIN_MENU_RELATION, "角色_管理系统菜单关联数据", sysRoleAdminMenuRelationService));
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(RoleRedisKeyConstant.SYS_ROLE_ADMIN_MENU_FUNCTION_RELATION, "角色_管理系统菜单功能关联数据", sysRoleAdminMenuFunctionRelationService));
+
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(SmsRedisKeyConstant.SMS_CODE_RECORD, "手机号短信验证码发送记录"));
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(SmsRedisKeyConstant.SMS_CODE_TOTAL_PHONE, "手机号短信验证码发送总数"));
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(SmsRedisKeyConstant.SMS_CODE_TOTAL_IP, "IP短信验证码发送总数"));
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(SmsRedisKeyConstant.SMS_CODE_LOGIN, "短信验证码[登录业务]"));
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(SmsRedisKeyConstant.SMS_CODE_REGISTER, "短信验证码[注册业务]"));
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(SmsRedisKeyConstant.SMS_CODE_UPDATE_LOGIN_PASSWORD, "短信验证码[修改登录密码业务]"));
+        RoleRedisKeyConstant.cacheBOList.add(new CacheBO(SmsRedisKeyConstant.SMS_CODE_UPDATE_PAY_PASSWORD, "短信验证码[修改支付密码业务]"));
+        for (CacheBO cacheBO : RoleRedisKeyConstant.cacheBOList) {
+            cacheBO.setKeyPrefix(cacheBO.getKeyPrefix() + "*");
+        }
     }
 
     @Override
